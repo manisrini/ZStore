@@ -10,6 +10,7 @@ import SnapKit
 
 class HomeScreenVC: UIViewController {
     
+    var viewModel = HomeScreenViewModel()
     
     private var filterView : FilterView?
     
@@ -28,7 +29,7 @@ class HomeScreenVC: UIViewController {
         self.setNavStyles()
         self.setupFilterView()
         self.setupCollectionView()
-        self.addConstraints()
+        self.fetch()
     }
     
     private func setupFilterView(){
@@ -54,6 +55,13 @@ class HomeScreenVC: UIViewController {
         self.storeCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         self.storeCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "Header")
         self.view.addSubview(storeCollectionView)
+        
+        self.storeCollectionView.snp.makeConstraints { make in
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+            make.top.equalTo(self.view).offset(15)
+            make.bottom.equalTo(self.view)
+        }
     }
     
     private func setNavStyles(){
@@ -64,15 +72,13 @@ class HomeScreenVC: UIViewController {
         self.navigationItem.leftBarButtonItem = titleItem
     }
     
-    private func addConstraints(){
-        self.storeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(self.view)
-            make.right.equalTo(self.view)
-            make.top.equalTo(self.view).offset(15)
-            make.bottom.equalTo(self.view)
+    
+    private func fetch(){
+        self.viewModel.fetchData {
+            
         }
     }
-    
+        
     private func createCompositionalLayout() -> UICollectionViewCompositionalLayout{
         
         let group1Item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))

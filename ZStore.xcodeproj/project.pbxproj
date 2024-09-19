@@ -22,6 +22,7 @@
 		2A4BF4C72C9C081C00C96C35 /* Header.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A4BF4C62C9C081C00C96C35 /* Header.xib */; };
 		2A4BF4C92C9C086E00C96C35 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BF4C52C9C081C00C96C35 /* Header.swift */; };
 		2A9A28FE2C9C862C002A08C5 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A28FD2C9C862C002A08C5 /* FilterView.swift */; };
+		2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		2A4BF4C52C9C081C00C96C35 /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
 		2A4BF4C62C9C081C00C96C35 /* Header.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Header.xib; sourceTree = "<group>"; };
 		2A9A28FD2C9C862C002A08C5 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,13 +114,13 @@
 		2A4BF4152C9BEC4C00C96C35 /* ZStore */ = {
 			isa = PBXGroup;
 			children = (
+				2A9A293A2C9CA760002A08C5 /* NetworkManager */,
+				2A9A29392C9CA720002A08C5 /* HomeScreen */,
 				2A4BF4C52C9C081C00C96C35 /* Header.swift */,
 				2A4BF4C62C9C081C00C96C35 /* Header.xib */,
 				2A9A28FC2C9C85F7002A08C5 /* FilterView */,
 				2A4BF4162C9BEC4C00C96C35 /* AppDelegate.swift */,
 				2A4BF4182C9BEC4C00C96C35 /* SceneDelegate.swift */,
-				2A4BF41A2C9BEC4C00C96C35 /* HomeScreenVC.swift */,
-				2A4BF4802C9BFB9F00C96C35 /* HomeScreenViewModel.swift */,
 				2A4BF4862C9C01C900C96C35 /* Test.swift */,
 				2A4BF4872C9C01C900C96C35 /* Test.xib */,
 				2A4BF41F2C9BEC4D00C96C35 /* Assets.xcassets */,
@@ -158,6 +160,23 @@
 				2A9A28FD2C9C862C002A08C5 /* FilterView.swift */,
 			);
 			path = FilterView;
+			sourceTree = "<group>";
+		};
+		2A9A29392C9CA720002A08C5 /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				2A4BF4802C9BFB9F00C96C35 /* HomeScreenViewModel.swift */,
+				2A4BF41A2C9BEC4C00C96C35 /* HomeScreenVC.swift */,
+			);
+			path = HomeScreen;
+			sourceTree = "<group>";
+		};
+		2A9A293A2C9CA760002A08C5 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,6 +321,7 @@
 				2A4BF4812C9BFB9F00C96C35 /* HomeScreenViewModel.swift in Sources */,
 				2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */,
 				2A4BF4892C9C01C900C96C35 /* Test.swift in Sources */,
+				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,
 				2A4BF4C92C9C086E00C96C35 /* Header.swift in Sources */,
 				2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */,

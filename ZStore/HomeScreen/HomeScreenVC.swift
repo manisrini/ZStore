@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import ZChip
+import DesignSystem
 
 class HomeScreenVC: UIViewController {
     
@@ -15,8 +16,10 @@ class HomeScreenVC: UIViewController {
     
     private var filterView = FilterView()
     var filterViewHeightConstraint: Constraint?
-    
     private var baseView = UIView()
+    
+    lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
+
     
     private let storeCollectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,12 +32,57 @@ class HomeScreenVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavStyles()
+        self.setUpSearchBar()
         self.setupBaseView()
         self.setupFilterView()
         self.setupCollectionView()
+        self.loadFabBtn()
         self.fetchProducts()
     }
     
+    private func setNavStyles(){
+        let label = UILabel()
+        label.text = "Store"
+        label.textAlignment = .left
+        let titleItem = UIBarButtonItem(customView: label)
+        titleItem.tintColor = .white
+        self.navigationItem.leftBarButtonItem = titleItem
+    }
+    
+    private func setUpSearchBar(){
+        searchBar.placeholder = "Placeholder"
+        searchBar.showsCancelButton = true
+        var leftNavBarButton = UIBarButtonItem(customView:searchBar)
+        self.navigationItem.leftBarButtonItem = leftNavBarButton
+    }
+    
+
+    private func loadFabBtn(){
+        
+        let fabBtn = UIButton()
+        
+        let image = UIImage(named: "sort")
+        fabBtn.setImage(image, for: .normal)
+        fabBtn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)
+
+        fabBtn.addTarget(self, action: #selector(self.didTapFabBtn), for: .touchUpInside)
+        fabBtn.backgroundColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
+        fabBtn.layer.cornerRadius = 25
+        
+        self.baseView.addSubview(fabBtn)
+
+        fabBtn.snp.makeConstraints { make in
+            make.bottom.equalTo(baseView).offset(-20)
+            make.right.equalTo(baseView).offset(-20)
+            make.height.equalTo(50)
+            make.width.equalTo(50)
+         }
+    }
+    
+    @objc func didTapFabBtn(){
+        
+    }
+
     private func setupBaseView(){
         baseView.backgroundColor = .white
         self.view.addSubview(baseView)
@@ -79,17 +127,7 @@ class HomeScreenVC: UIViewController {
             make.bottom.equalTo(self.baseView)
         }
     }
-    
-    private func setNavStyles(){
-        let label = UILabel()
-        label.text = "Store"
-        label.textAlignment = .left
-        let titleItem = UIBarButtonItem(customView: label)
-        titleItem.tintColor = .white
-        self.navigationItem.leftBarButtonItem = titleItem
-    }
-    
-    
+        
     private func fetchProducts(){
         if self.viewModel.allProducts.count == 0{
             self.viewModel.fetchData {
@@ -127,10 +165,8 @@ class HomeScreenVC: UIViewController {
         
         let section2GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
         section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 2, trailing: 0)
-        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(200)), subitems: [section2GroupItem])
+        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(50)), subitems: [section2GroupItem])
         let section2 = NSCollectionLayoutSection(group: section2Group)
-//        let section2Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-//        section2.boundarySupplementaryItems = [section2Header]
         
 
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnv in
@@ -170,15 +206,6 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
         }
         
         return UICollectionReusableView()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width
-        let numberOfItemsPerRow: CGFloat = 3
-        let spacing: CGFloat = 5
-        let availableWidth = width - spacing * (numberOfItemsPerRow + 1)
-        let itemDimension = floor(availableWidth / numberOfItemsPerRow)
-        return CGSize(width: itemDimension, height: itemDimension)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {

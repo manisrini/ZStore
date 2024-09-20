@@ -107,7 +107,7 @@ class HomeScreenViewModel{
     }
 
     
-    private func setSelectedCategoryProducts(){
+    func setSelectedCategoryProducts(){
         self.selectedCategoryProducts = allProducts.filter { product in
             product.category_id ?? "" == self.selectedCategory?.id ?? ""
         }

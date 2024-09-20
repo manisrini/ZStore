@@ -10,7 +10,7 @@ import UIKit
 
 public protocol ZChipComponentDelegate : AnyObject{
     func didChangeHeight(size : CGSize)
-    func didSelectItem(item : Tag)
+    func didSelectNewItem(item : Tag)
 }
 
 public class ZChipComponent : UIView
@@ -129,7 +129,13 @@ extension ZChipComponent : UICollectionViewDelegate,UICollectionViewDataSource,U
         
         if let _viewModel = viewModel{
             let item = _viewModel.tags[indexPath.row]
-            self.delegate?.didSelectItem(item: item)
+
+            if let currentSelectedItem = _viewModel.tags.filter({$0.isSelected == true}).first{
+                if currentSelectedItem.id == item.id{
+                    return
+                }
+            }
+            self.delegate?.didSelectNewItem(item: item)
         }
         
         self.viewModel?.updateTags(indexPath.row)

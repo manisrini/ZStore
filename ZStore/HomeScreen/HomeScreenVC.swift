@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import ZChip
 
 class HomeScreenVC: UIViewController {
     
@@ -31,7 +32,7 @@ class HomeScreenVC: UIViewController {
         self.setupBaseView()
         self.setupFilterView()
         self.setupCollectionView()
-        self.fetch()
+        self.fetchProducts()
     }
     
     private func setupBaseView(){
@@ -47,7 +48,7 @@ class HomeScreenVC: UIViewController {
     }
     
     private func setupFilterView(){
-        filterView.backgroundColor = .yellow
+        filterView.delegate = self
         self.baseView.addSubview(filterView)
         let navBarHeight = (self.navigationController?.navigationBar.frame.height ?? 0)
 
@@ -55,8 +56,8 @@ class HomeScreenVC: UIViewController {
             make.left.equalTo(self.baseView).offset(10)
             make.top.equalTo(self.baseView).offset(navBarHeight + 40)
             make.right.equalTo(self.baseView).offset(10)
-            make.height.equalTo(100)
-            self.filterViewHeightConstraint = make.height.equalTo(100).constraint
+            make.height.equalTo(110)
+            self.filterViewHeightConstraint = make.height.equalTo(110).constraint
         }
     }
     
@@ -89,47 +90,56 @@ class HomeScreenVC: UIViewController {
     }
     
     
-    private func fetch(){
-        self.viewModel.fetchData {
-            DispatchQueue.main.async {
-                self.updateStickyHeaderView()
-                self.storeCollectionView.reloadData()
+    private func fetchProducts(){
+        if self.viewModel.allProducts.count == 0{
+            self.viewModel.fetchData {
+                DispatchQueue.main.async {
+                    self.configStickyHeaderView()
+                    self.storeCollectionView.reloadData()
+                }
             }
+        }else{
+            self.viewModel.setSelectedCategoryProducts()
+            self.storeCollectionView.reloadSections(IndexSet(integer: 1))
         }
     }
+    
+    private func getNewProducts(){
+        self.storeCollectionView.reloadData()
+    }
         
-    private func updateStickyHeaderView(){
+    private func configStickyHeaderView(){
         let items = self.viewModel.getCategories()
         self.filterView.updateView(items)
     }
     
     private func createCompositionalLayout() -> UICollectionViewCompositionalLayout{
         
+        let section1GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
+        section1GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 0)
+        let section1Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),heightDimension: .absolute(120)), subitems: [section1GroupItem])
+        let section1 = NSCollectionLayoutSection(group: section1Group)
+        let section1Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section1.boundarySupplementaryItems = [section1Header]
+        section1.orthogonalScrollingBehavior = .paging
+        
+        
         let section2GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 0)
-        let section2Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),heightDimension: .absolute(120)), subitems: [section2GroupItem])
+        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 2, trailing: 0)
+        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(200)), subitems: [section2GroupItem])
         let section2 = NSCollectionLayoutSection(group: section2Group)
         let section2Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         section2.boundarySupplementaryItems = [section2Header]
-        section2.orthogonalScrollingBehavior = .paging
-        
-        
-        let section3GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        section3GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 2, trailing: 0)
-        let section3Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(200)), subitems: [section3GroupItem])
-        let section3 = NSCollectionLayoutSection(group: section3Group)
-        let section3Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section3.boundarySupplementaryItems = [section3Header]
         
 
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnv in
             switch sectionIndex{
             case 0:
-                return section2
+                return section1
             case 1:
-                return section3
-            default:
                 return section2
+            default:
+                return section1
             }
         }
         return layout
@@ -192,4 +202,16 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
         return UICollectionViewCell()
     }
     
+}
+
+
+extension HomeScreenVC : FilterViewDelegate{
+    func didChangeCategory(item: Tag) {
+                
+        if let newSelectedCategory = self.viewModel.availableCategories.filter({$0.id ?? "" == item.id}).first{
+            self.viewModel.selectedCategory = newSelectedCategory
+        }
+        
+        self.fetchProducts()
+    }
 }

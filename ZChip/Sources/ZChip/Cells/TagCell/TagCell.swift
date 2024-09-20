@@ -31,7 +31,7 @@ class TagCell: UICollectionViewCell {
         self.containerView.backgroundColor = model.bgColor
         self.containerView.borderColor = model.borderColor
         self.containerView.borderWidth = 1.5
-        self.containerView.cornerRadius = 16
+        self.containerView.cornerRadius = 20
     }
     
 }

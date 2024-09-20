@@ -8,10 +8,16 @@
 import UIKit
 import ZChip
 
+
+protocol FilterViewDelegate : AnyObject{
+    func didChangeCategory(item : Tag)
+}
+
 class FilterView: UIView {
 
     static let nibname = "FilterView"
     var chipComponent = ZChipComponent()
+    weak var delegate : FilterViewDelegate?
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,6 +31,7 @@ class FilterView: UIView {
     private func addView(){
         
         chipComponent = ZChipComponent()
+        chipComponent.delegate = self
         chipComponent.config(viewModel:  ZChipComponentViewModel(tags: []))
         self.addSubview(chipComponent)
                 
@@ -40,4 +47,14 @@ class FilterView: UIView {
         chipComponent.updateTags(tags: items)
     }
     
+}
+
+extension FilterView : ZChipComponentDelegate{
+    func didSelectNewItem(item: Tag) {
+        self.delegate?.didChangeCategory(item: item)
+    }
+    
+    func didChangeHeight(size: CGSize) {
+        
+    }
 }

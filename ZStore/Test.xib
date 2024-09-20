@@ -19,9 +19,23 @@
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uaD-ff-n1P">
                         <rect key="frame" x="0.0" y="0.0" width="274" height="50"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="may-pP-miB">
+                                <rect key="frame" x="116" y="14.666666666666664" width="42" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="m8I-RU-T36"/>
+                                    <constraint firstAttribute="width" constant="42" id="t0F-TH-YpT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="0L6-ZI-a7H"/>
+                            <constraint firstItem="may-pP-miB" firstAttribute="centerX" secondItem="uaD-ff-n1P" secondAttribute="centerX" id="6Yv-MH-EQT"/>
+                            <constraint firstItem="may-pP-miB" firstAttribute="centerY" secondItem="uaD-ff-n1P" secondAttribute="centerY" id="wjX-fu-V4l"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -34,6 +48,9 @@
                 <constraint firstAttribute="bottom" secondItem="uaD-ff-n1P" secondAttribute="bottom" id="YnX-yc-qIk"/>
             </constraints>
             <size key="customSize" width="274" height="50"/>
+            <connections>
+                <outlet property="testlbl" destination="may-pP-miB" id="5DI-yW-6kI"/>
+            </connections>
             <point key="canvasLocation" x="355.72519083969462" y="19.718309859154932"/>
         </collectionViewCell>
     </objects>

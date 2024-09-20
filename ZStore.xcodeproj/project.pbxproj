@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A44413A2C9D7C1D0003A9C5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4441392C9D7C1D0003A9C5 /* Extensions.swift */; };
+		2A44413C2C9D7C320003A9C5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44413B2C9D7C320003A9C5 /* Constants.swift */; };
+		2A44417C2C9DA2600003A9C5 /* ZChip in Frameworks */ = {isa = PBXBuildFile; productRef = 2A44417B2C9DA2600003A9C5 /* ZChip */; };
 		2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BF4162C9BEC4C00C96C35 /* AppDelegate.swift */; };
 		2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BF4182C9BEC4C00C96C35 /* SceneDelegate.swift */; };
 		2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BF41A2C9BEC4C00C96C35 /* HomeScreenVC.swift */; };
@@ -44,6 +47,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A4441392C9D7C1D0003A9C5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2A44413B2C9D7C320003A9C5 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2A44417A2C9D922B0003A9C5 /* ZChip */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ZChip; sourceTree = "<group>"; };
 		2A4BF4132C9BEC4C00C96C35 /* ZStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A4BF4162C9BEC4C00C96C35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A4BF4182C9BEC4C00C96C35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A4BF48C2C9C02AF00C96C35 /* SnapKit in Frameworks */,
+				2A44417C2C9DA2600003A9C5 /* ZChip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,9 +99,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A4441332C9D7B070003A9C5 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2A4441382C9D7C070003A9C5 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2A4441392C9D7C1D0003A9C5 /* Extensions.swift */,
+				2A44413B2C9D7C320003A9C5 /* Constants.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		2A4BF40A2C9BEC4C00C96C35 = {
 			isa = PBXGroup;
 			children = (
+				2A44417A2C9D922B0003A9C5 /* ZChip */,
 				2A4BF4152C9BEC4C00C96C35 /* ZStore */,
 				2A4BF42C2C9BEC4D00C96C35 /* ZStoreTests */,
 				2A4BF4362C9BEC4D00C96C35 /* ZStoreUITests */,
@@ -116,6 +140,8 @@
 		2A4BF4152C9BEC4C00C96C35 /* ZStore */ = {
 			isa = PBXGroup;
 			children = (
+				2A4441382C9D7C070003A9C5 /* Utils */,
+				2A4441332C9D7B070003A9C5 /* UI */,
 				2A9A293D2C9CAC62002A08C5 /* Codable */,
 				2A9A293A2C9CA760002A08C5 /* NetworkManager */,
 				2A9A29392C9CA720002A08C5 /* HomeScreen */,
@@ -208,6 +234,7 @@
 			name = ZStore;
 			packageProductDependencies = (
 				2A4BF48B2C9C02AF00C96C35 /* SnapKit */,
+				2A44417B2C9DA2600003A9C5 /* ZChip */,
 			);
 			productName = ZStore;
 			productReference = 2A4BF4132C9BEC4C00C96C35 /* ZStore.app */;
@@ -336,7 +363,9 @@
 				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,
 				2A4BF4C92C9C086E00C96C35 /* Header.swift in Sources */,
+				2A44413A2C9D7C1D0003A9C5 /* Extensions.swift in Sources */,
 				2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */,
+				2A44413C2C9D7C320003A9C5 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +715,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2A44417B2C9DA2600003A9C5 /* ZChip */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ZChip;
+		};
 		2A4BF48B2C9C02AF00C96C35 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2A4BF4472C9BF49700C96C35 /* XCRemoteSwiftPackageReference "SnapKit" */;

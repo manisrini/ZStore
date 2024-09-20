@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ZChip
 
 struct ProductModel{
     let id : String
@@ -22,8 +23,11 @@ struct ProductModel{
 
 class HomeScreenViewModel{
     
-    var productItems : [ProductModel] = []
+    var allProducts : [Product] = []
     var availableCategories : [ProductCategory] = []
+    var availableOffers : [CardOffer] = []
+    var selectedCategory : ProductCategory?
+    var selectedCategoryProducts : [Product] = []
     
     func fetchData(completion : @escaping() -> Void){
         let url = "https://raw.githubusercontent.com/princesolomon/zstore/main/data.json"
@@ -44,8 +48,16 @@ class HomeScreenViewModel{
     
     private func createProductModel(_ response : HomeScreenResponse){
         self.availableCategories = response.category ?? []
+        self.availableOffers = response.card_offers ?? []
+        self.allProducts = response.products ?? []
         
-        var formattedProducts : [ProductModel] = []
+        if let _selectedCategory = response.category?.first{
+            self.setSelectedCategory(_selectedCategory)
+        }
+        
+        self.setSelectedCategoryProducts()
+        
+        /*var formattedProducts : [ProductModel] = []
         
         if let _products = response.products{
             for product in _products {
@@ -63,17 +75,18 @@ class HomeScreenViewModel{
                     description: product.description)
                 formattedProducts.append(formattedProduct)
             }
-        }
-        
-        print(formattedProducts)
+        }*/
+
     }
     
-    private func getCategory(product : Product,allCategories : [ProductCategory]) -> ProductCategory?{
-        let categoryId = product.category_id ?? ""
-        let filteredCategory = allCategories.filter { category in
-            category.id ?? "" == categoryId
-        }.first
-        return filteredCategory
+   /* private func getCategory(product : Product,allCategories : [ProductCategory]) -> ProductCategory?{
+        if let _categoryId = product.category_id{
+            let filteredCategory = allCategories.filter { category in
+                category.id ?? "" == _categoryId
+            }.first
+            return filteredCategory
+        }
+        return nil
     }
     
     private func getCardOffers(product : Product,allCardOffers : [CardOffer]) -> [CardOffer]?{
@@ -81,12 +94,42 @@ class HomeScreenViewModel{
         var currentProductOffers : [CardOffer] = []
         
         for offer in allCardOffers {
-            let offerId = offer.id ?? ""
-            if currentProductCardOffersIds.contains(offerId){
-                currentProductOffers.append(offer)
+            if let _offerId = offer.id{
+                if currentProductCardOffersIds.contains(_offerId){
+                    currentProductOffers.append(offer)
+                }
             }
         }
         return currentProductOffers
+    }*/
+    private func setSelectedCategory(_ category : ProductCategory){
+        self.selectedCategory = category
     }
+
+    
+    private func setSelectedCategoryProducts(){
+        self.selectedCategoryProducts = allProducts.filter { product in
+            product.category_id ?? "" == self.selectedCategory?.id ?? ""
+        }
+    }
+    
+    func getProductCountForSelectedCategory() -> Int{
+        return self.selectedCategoryProducts.count
+    }
+    
+    func getCategories() -> [Tag]{
+        var categories : [Tag] = []
+        
+        for (index,category) in self.availableCategories.enumerated() {
+            if index == 0{
+                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: true))
+            }else{
+                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: false))
+            }
+        }
+        
+        return categories
+    }
+    
     
 }

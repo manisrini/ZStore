@@ -67,9 +67,9 @@ class HomeScreenVC: UIViewController {
         self.storeCollectionView.collectionViewLayout = createCompositionalLayout()
         self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
         self.storeCollectionView.register(UINib(nibName: Constants.TagCell, bundle: nil), forCellWithReuseIdentifier: Constants.TagCell)
+        self.storeCollectionView.register(OfferSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "OfferSectionHeaderView")
+        self.storeCollectionView.register(OfferSectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "OfferSectionFooterView")
         
-        self.storeCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-        self.storeCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "Header")
         self.baseView.addSubview(storeCollectionView)
         
         self.storeCollectionView.snp.makeConstraints { make in
@@ -120,7 +120,8 @@ class HomeScreenVC: UIViewController {
         let section1Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),heightDimension: .absolute(120)), subitems: [section1GroupItem])
         let section1 = NSCollectionLayoutSection(group: section1Group)
         let section1Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section1.boundarySupplementaryItems = [section1Header]
+        let section1Footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+        section1.boundarySupplementaryItems = [section1Header,section1Footer]
         section1.orthogonalScrollingBehavior = .paging
         
         
@@ -128,8 +129,8 @@ class HomeScreenVC: UIViewController {
         section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 2, trailing: 0)
         let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(200)), subitems: [section2GroupItem])
         let section2 = NSCollectionLayoutSection(group: section2Group)
-        let section2Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section2.boundarySupplementaryItems = [section2Header]
+//        let section2Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+//        section2.boundarySupplementaryItems = [section2Header]
         
 
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnv in
@@ -153,16 +154,19 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if indexPath.row == 0{ //Section 1 header
+        if indexPath.section == 0{ //Section 1 header
             if kind == UICollectionView.elementKindSectionHeader{
-                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
-                       headerView.backgroundColor = UIColor.blue
-                       return headerView
+                if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionHeaderView", for: indexPath) as? OfferSectionHeaderView{
+                    return headerView
+                }
             }
-        }else if indexPath.row == 1{
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
-            headerView.backgroundColor = UIColor.green
-            return headerView
+            
+            else if kind == UICollectionView.elementKindSectionFooter{
+                if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionFooterView", for: indexPath) as? OfferSectionFooterView{
+                    return footerView
+                }
+
+            }
         }
         
         return UICollectionReusableView()
@@ -182,7 +186,7 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 180.0)
+        return CGSize(width: collectionView.frame.width, height: 60)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

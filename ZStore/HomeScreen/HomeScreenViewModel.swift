@@ -108,8 +108,10 @@ class HomeScreenViewModel{
 
     
     func setSelectedCategoryProducts(){
-        self.selectedCategoryProducts = allProducts.filter { product in
-            product.category_id ?? "" == self.selectedCategory?.id ?? ""
+        if let _selectedCategoryId = self.selectedCategory?.id{
+            self.selectedCategoryProducts = allProducts.filter { product in
+                product.category_id ?? "" == _selectedCategoryId
+            }
         }
     }
     
@@ -140,5 +142,15 @@ class HomeScreenViewModel{
             imageUrl: offer.image_url)
     }
     
-    
+    func createLinearLayoutProductModel(_ index : Int) -> LinearLayoutCellViewModel{
+        let product = self.selectedCategoryProducts[index]
+        return LinearLayoutCellViewModel(
+            imageUrl: product.image_url ?? "",
+            name: product.name ?? "",
+            reviewCount: product.review_count ?? 0,
+            rating: product.rating ?? 0.0,
+            price: product.price ?? 0.0,
+            desc: product.description ?? "",
+            colors: product.colors)
+    }
 }

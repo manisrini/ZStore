@@ -10,6 +10,10 @@
 		2A153A7E2C9E8F690009761F /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A7D2C9E8F690009761F /* RadioButtonView.swift */; };
 		2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */; };
 		2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */; };
+		2A153A882C9EE1260009761F /* LinearLayoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A872C9EE1260009761F /* LinearLayoutCell.swift */; };
+		2A153A8A2C9F07EE0009761F /* AvailableColorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A892C9F07EE0009761F /* AvailableColorsView.swift */; };
+		2A153A8C2C9F27330009761F /* LinearLayoutCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A8B2C9F27330009761F /* LinearLayoutCellViewModel.swift */; };
+		2A153A8E2C9F32520009761F /* AvailableColorsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A8D2C9F32520009761F /* AvailableColorsViewModel.swift */; };
 		2A1C10F82C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C10F72C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift */; };
 		2A1C10FD2C9DEC7F00CC59A5 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 2A1C10FC2C9DEC7F00CC59A5 /* DesignSystem */; };
 		2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */; };
@@ -54,6 +58,10 @@
 		2A153A7D2C9E8F690009761F /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
 		2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCellViewModel.swift; sourceTree = "<group>"; };
+		2A153A872C9EE1260009761F /* LinearLayoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearLayoutCell.swift; sourceTree = "<group>"; };
+		2A153A892C9F07EE0009761F /* AvailableColorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableColorsView.swift; sourceTree = "<group>"; };
+		2A153A8B2C9F27330009761F /* LinearLayoutCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearLayoutCellViewModel.swift; sourceTree = "<group>"; };
+		2A153A8D2C9F32520009761F /* AvailableColorsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableColorsViewModel.swift; sourceTree = "<group>"; };
 		2A1C10F72C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferSectionHeaderView.swift; sourceTree = "<group>"; };
 		2A1C10FB2C9DEAAC00CC59A5 /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferSectionFooterView.swift; sourceTree = "<group>"; };
@@ -115,6 +123,33 @@
 				2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */,
 			);
 			path = OfferView;
+			sourceTree = "<group>";
+		};
+		2A153A842C9EE0C00009761F /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				2A153A862C9EE1080009761F /* Waterfall */,
+				2A153A852C9EE1030009761F /* Linear */,
+			);
+			path = DetailView;
+			sourceTree = "<group>";
+		};
+		2A153A852C9EE1030009761F /* Linear */ = {
+			isa = PBXGroup;
+			children = (
+				2A153A872C9EE1260009761F /* LinearLayoutCell.swift */,
+				2A153A8B2C9F27330009761F /* LinearLayoutCellViewModel.swift */,
+				2A153A892C9F07EE0009761F /* AvailableColorsView.swift */,
+				2A153A8D2C9F32520009761F /* AvailableColorsViewModel.swift */,
+			);
+			path = Linear;
+			sourceTree = "<group>";
+		};
+		2A153A862C9EE1080009761F /* Waterfall */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Waterfall;
 			sourceTree = "<group>";
 		};
 		2A1C10F62C9DE4BF00CC59A5 /* SupplementaryViews */ = {
@@ -219,6 +254,7 @@
 		2A9A29392C9CA720002A08C5 /* HomeScreen */ = {
 			isa = PBXGroup;
 			children = (
+				2A153A842C9EE0C00009761F /* DetailView */,
 				2A153A7F2C9EC3C00009761F /* OfferView */,
 				2A9A28FC2C9C85F7002A08C5 /* FilterView */,
 				2A1C10F62C9DE4BF00CC59A5 /* SupplementaryViews */,
@@ -391,9 +427,13 @@
 				2A4BF4812C9BFB9F00C96C35 /* HomeScreenViewModel.swift in Sources */,
 				2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */,
 				2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */,
+				2A153A8A2C9F07EE0009761F /* AvailableColorsView.swift in Sources */,
 				2A4BF4892C9C01C900C96C35 /* Test.swift in Sources */,
+				2A153A8C2C9F27330009761F /* LinearLayoutCellViewModel.swift in Sources */,
 				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
+				2A153A8E2C9F32520009761F /* AvailableColorsViewModel.swift in Sources */,
 				2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */,
+				2A153A882C9EE1260009761F /* LinearLayoutCell.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,
 				2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */,
 				2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */,

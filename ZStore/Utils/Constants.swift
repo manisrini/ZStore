@@ -8,9 +8,10 @@
 import Foundation
 import UIKit
 
-class Constants{
+class CellIdentifiers{
     static let TagCell = "TagCell"
     static let OfferCell = "OfferCollectionViewCell"
+    static let LinearLayoutCell = "LinearLayoutCell"
 }
 
 class Utils{

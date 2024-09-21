@@ -38,4 +38,5 @@ struct Product : Codable{
     let card_offer_ids : [String]?
     let image_url : String?
     let description : String?
+    let colors : [String]?
 }

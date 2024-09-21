@@ -67,7 +67,7 @@ public class ZChipComponent : UIView
     private func setUpCollectionView(){
         let alignedFlowLayout =  AlignedCollectionViewFlowLayout()
         alignedFlowLayout.horizontalAlignment = .left
-        alignedFlowLayout.minimumLineSpacing = 5
+        alignedFlowLayout.minimumLineSpacing = 10
         self.tagCollectionView.collectionViewLayout = alignedFlowLayout
     }
     
@@ -112,7 +112,7 @@ extension ZChipComponent : UICollectionViewDelegate,UICollectionViewDataSource,U
             let tagValue = _viewModel.getTagValue(index: indexPath.row)
             let fontAttributes = [NSAttributedString.Key.font: font]
             let size = (tagValue as NSString).size(withAttributes: fontAttributes)
-            return CGSize(width: size.width + 20, height: 40)
+            return CGSize(width: size.width + 20, height: 30)
         }
         return CGSize()
     }

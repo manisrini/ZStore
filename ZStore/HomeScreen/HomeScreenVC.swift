@@ -120,9 +120,10 @@ class HomeScreenVC: UIViewController {
         self.storeCollectionView.delegate = self
         self.storeCollectionView.collectionViewLayout = createCompositionalLayout()
         self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
-        self.storeCollectionView.register(UINib(nibName: Constants.TagCell, bundle: nil), forCellWithReuseIdentifier: Constants.TagCell)
+        self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
         
-        self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: Constants.OfferCell)
+        self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifiers.OfferCell)
+        self.storeCollectionView.register(LinearLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.LinearLayoutCell)
         self.storeCollectionView.register(OfferSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "OfferSectionHeaderView")
         self.storeCollectionView.register(OfferSectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "OfferSectionFooterView")
         
@@ -172,8 +173,8 @@ class HomeScreenVC: UIViewController {
         
         
         let section2GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 2, trailing: 0)
-        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(50)), subitems: [section2GroupItem])
+        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 12, bottom: 20, trailing: 0)
+        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .estimated(250)), subitems: [section2GroupItem])
         let section2 = NSCollectionLayoutSection(group: section2Group)
         
 
@@ -235,18 +236,25 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
                 
         if indexPath.section == 0{ // OfferSection
-            if let offerCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.OfferCell, for: indexPath) as? OfferCollectionViewCell{
+            if let offerCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.OfferCell, for: indexPath) as? OfferCollectionViewCell{
                 let offerVM = self.viewModel.createOfferCellViewModel(indexPath.row)
                 offerCell.config(viewModel: offerVM)
                 return offerCell
             }
         }
-        
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Test", for: indexPath) as? Test{
-            cell.backgroundColor = .red
-            cell.layer.cornerRadius = 8
-            return cell
+        else if indexPath.section == 1{
+            if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
+                let productVM = self.viewModel.createLinearLayoutProductModel(indexPath.row)
+                linearCell.config(viewModel: productVM)
+                return linearCell
+            }
         }
+        
+//        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Test", for: indexPath) as? Test{
+//            cell.backgroundColor = .red
+//            cell.layer.cornerRadius = 8
+//            return cell
+//        }
         return UICollectionViewCell()
     }
     

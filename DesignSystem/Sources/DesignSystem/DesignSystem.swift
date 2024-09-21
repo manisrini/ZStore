@@ -8,6 +8,8 @@ public enum DSMColorTokens : String{
     case Arattai_Tangelo = "E6560F"
     case Gray = "545454"
     case Blue = "226AB4"
+    case Tertiary = "747474"
+    case Quaternary = "989898"
 }
 
 

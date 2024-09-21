@@ -13,6 +13,7 @@ class LinearLayoutCell : UICollectionViewCell{
     
     static let identifier = CellIdentifiers.LinearLayoutCell
     private var colorsView = AvailableColorsView(viewModel: AvailableColorsViewModel(colors: []))
+    private var ratingView = RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: UIImage(named: "ratingFilled"), offImage: UIImage(named: "ratingNotFilled")))
     
     private let title : UILabel = {
         let label = UILabel()
@@ -23,9 +24,8 @@ class LinearLayoutCell : UICollectionViewCell{
         return label
     }()
     
-    private let numOfReviewsLabel : UILabel = {
+    private let reviewCountLbl : UILabel = {
         let label = UILabel()
-        label.text = "4.5"
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .fontStyle(size: 13, weight: 400)
@@ -75,10 +75,11 @@ class LinearLayoutCell : UICollectionViewCell{
     private func setupView(){
         
         let hostingColorsView = UIHostingController(rootView: colorsView)
+        let hostingRatingView = UIHostingController(rootView: ratingView)
 
-        let reviewHStackView = UIStackView(arrangedSubviews: [numOfReviewsLabel])
+        let reviewHStackView = UIStackView(arrangedSubviews: [hostingRatingView.view,reviewCountLbl])
         reviewHStackView.axis = .horizontal
-        reviewHStackView.spacing = 8
+        reviewHStackView.spacing = 4
         reviewHStackView.translatesAutoresizingMaskIntoConstraints = false
         
         reviewHStackView.snp.makeConstraints { make in
@@ -93,7 +94,6 @@ class LinearLayoutCell : UICollectionViewCell{
         priceHStackView.snp.makeConstraints { make in
             make.height.equalTo(20)
         }
-        
         
         self.contentView.addSubview(productPreview)
 
@@ -133,7 +133,7 @@ class LinearLayoutCell : UICollectionViewCell{
 //            make.height.equalTo(25)
 //        }
         
-        let detailsVStackView = UIStackView(arrangedSubviews: [title,numOfReviewsLabel,reviewHStackView,priceHStackView,descLbl,hostingColorsView.view])
+        let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,priceHStackView,descLbl,hostingColorsView.view])
         detailsVStackView.axis = .vertical
         detailsVStackView.spacing = 2
         detailsVStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -153,10 +153,9 @@ class LinearLayoutCell : UICollectionViewCell{
         //details view constraints
         detailsVStackView.snp.makeConstraints { make in
             make.left.equalTo(productPreview.snp.right).offset(15)
-            make.right.lessThanOrEqualTo(self.contentView).offset(-10)
+            make.right.equalTo(self.contentView).offset(-10)
             make.top.equalTo(self.contentView)
-            make.bottom.lessThanOrEqualTo(self.contentView)
-            make.height.equalTo(200)
+//            make.height.equalTo(200)
         }
 
         
@@ -169,7 +168,9 @@ class LinearLayoutCell : UICollectionViewCell{
         self.title.text = viewModel.name
         self.descLbl.text = viewModel.desc
         self.priceLbl.text = "₹\(viewModel.price)"
+        self.reviewCountLbl.text = "(\(viewModel.reviewCount))"
         
+        self.ratingView.setRating(rating: viewModel.rating)
         if let _colors = viewModel.colors{
             self.colorsView.setColors(colors: _colors)
         }

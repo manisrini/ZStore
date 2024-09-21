@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ratingOn.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

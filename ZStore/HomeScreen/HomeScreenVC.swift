@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import ZChip
 import DesignSystem
+import SwiftUI
 
 class HomeScreenVC: UIViewController {
     
@@ -52,26 +53,31 @@ class HomeScreenVC: UIViewController {
     private func setUpSearchBar(){
         searchBar.placeholder = "Placeholder"
         searchBar.showsCancelButton = true
-        var leftNavBarButton = UIBarButtonItem(customView:searchBar)
+        let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
     }
     
 
     private func loadFabBtn(){
         
-        let fabBtn = UIButton()
+        let fabContainerView = UIView()
+        fabContainerView.layer.cornerRadius = 25
         
-        let image = UIImage(named: "sort")
-        fabBtn.setImage(image, for: .normal)
-        fabBtn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)
-
-        fabBtn.addTarget(self, action: #selector(self.didTapFabBtn), for: .touchUpInside)
-        fabBtn.backgroundColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
-        fabBtn.layer.cornerRadius = 25
+        let fabView = UIHostingController(rootView: FabView())
+        fabView.view.layer.cornerRadius = 25
         
-        self.baseView.addSubview(fabBtn)
+        fabContainerView.addSubview(fabView.view)
+        
+        fabView.view.snp.makeConstraints { make in
+            make.left.equalTo(fabContainerView)
+            make.right.equalTo(fabContainerView)
+            make.top.equalTo(fabContainerView)
+            make.bottom.equalTo(fabContainerView)
+        }
+        
+        self.baseView.addSubview(fabContainerView)
 
-        fabBtn.snp.makeConstraints { make in
+        fabContainerView.snp.makeConstraints { make in
             make.bottom.equalTo(baseView).offset(-20)
             make.right.equalTo(baseView).offset(-20)
             make.height.equalTo(50)
@@ -199,6 +205,7 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
             
             else if kind == UICollectionView.elementKindSectionFooter{
                 if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionFooterView", for: indexPath) as? OfferSectionFooterView{
+                    footerView.delegate = self
                     return footerView
                 }
 
@@ -242,7 +249,12 @@ extension HomeScreenVC : FilterViewDelegate{
         if let newSelectedCategory = self.viewModel.availableCategories.filter({$0.id ?? "" == item.id}).first{
             self.viewModel.selectedCategory = newSelectedCategory
         }
-        
         self.fetchProducts()
+    }
+}
+
+extension HomeScreenVC : OfferSectionFooterViewDelegate{
+    func didTapButton() {
+        
     }
 }

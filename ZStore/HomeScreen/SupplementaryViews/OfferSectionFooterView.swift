@@ -82,7 +82,7 @@ class OfferSectionFooterView : UICollectionReusableView{
         self.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
-            make.left.equalTo(10)
+            make.left.equalTo(16)
             make.top.equalTo(5)
             make.height.equalTo(35)
         }

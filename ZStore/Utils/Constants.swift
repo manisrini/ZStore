@@ -10,6 +10,7 @@ import UIKit
 
 class Constants{
     static let TagCell = "TagCell"
+    static let OfferCell = "OfferCollectionViewCell"
 }
 
 class Utils{

@@ -131,5 +131,14 @@ class HomeScreenViewModel{
         return categories
     }
     
+    func createOfferCellViewModel(_ index : Int) -> OfferCellViewModel{
+        let offer = self.availableOffers[index]
+        return OfferCellViewModel(
+            titleText: offer.card_name ?? "",
+            subtitleText: offer.offer_desc ?? "",
+            cashbackText: offer.max_discount ?? "",
+            imageUrl: offer.image_url)
+    }
+    
     
 }

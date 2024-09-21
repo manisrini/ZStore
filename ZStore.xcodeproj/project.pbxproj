@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2A153A7E2C9E8F690009761F /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A7D2C9E8F690009761F /* RadioButtonView.swift */; };
+		2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */; };
+		2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */; };
 		2A1C10F82C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C10F72C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift */; };
 		2A1C10FD2C9DEC7F00CC59A5 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 2A1C10FC2C9DEC7F00CC59A5 /* DesignSystem */; };
 		2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */; };
@@ -50,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		2A153A7D2C9E8F690009761F /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
+		2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
+		2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCellViewModel.swift; sourceTree = "<group>"; };
 		2A1C10F72C9DE4DF00CC59A5 /* OfferSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferSectionHeaderView.swift; sourceTree = "<group>"; };
 		2A1C10FB2C9DEAAC00CC59A5 /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferSectionFooterView.swift; sourceTree = "<group>"; };
@@ -104,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A153A7F2C9EC3C00009761F /* OfferView */ = {
+			isa = PBXGroup;
+			children = (
+				2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */,
+				2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */,
+			);
+			path = OfferView;
+			sourceTree = "<group>";
+		};
 		2A1C10F62C9DE4BF00CC59A5 /* SupplementaryViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +219,7 @@
 		2A9A29392C9CA720002A08C5 /* HomeScreen */ = {
 			isa = PBXGroup;
 			children = (
+				2A153A7F2C9EC3C00009761F /* OfferView */,
 				2A9A28FC2C9C85F7002A08C5 /* FilterView */,
 				2A1C10F62C9DE4BF00CC59A5 /* SupplementaryViews */,
 				2A1C10F92C9DE53C00CC59A5 /* Fab */,
@@ -381,8 +395,10 @@
 				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
 				2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,
+				2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */,
 				2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */,
 				2A44413C2C9D7C320003A9C5 /* Constants.swift in Sources */,
+				2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

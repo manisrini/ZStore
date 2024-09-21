@@ -5,25 +5,23 @@
 //  Created by Manikandan on 21/09/24.
 //
 
-//import SwiftUI
-//
-//public struct ZImage : View{
-//    
-//    var image : UIImage
-//    var height : CGFloat
-//    var width : CGFloat
-//    var tintColor
-//    
-//    var body : some View {
-//        Image(uiImage: image)
-//            .resizable()
-//            .frame(width: width,height: height)
-//    }
-//}
-//
-//
-//extension View{
-//    func cornerRadiusStyle(_ cornerRadius : CGFloat = 5,_ borderWidth : CGFloat = 1) -> some View{
-//        modifier(CustomCorners(cornerRadius: cornerRadius,borderWidth: borderWidth))
-//    }
-//}
+import UIKit
+import SDWebImage
+
+public class ZImageView : UIImageView{
+        
+    public func loadImage(url : String){
+        
+        self.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        self.sd_imageTransition = .flipFromTop
+        
+        if let url = URL(string: url){
+            let placeholderImage = UIImage(named: "thumbnail")
+            self.sd_setImage(with: url) { image, error, type, url in
+                if error != nil{
+                    self.image = placeholderImage
+                }
+            }
+        }
+    }
+}

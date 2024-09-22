@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23E214" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="CardOfferDetails" representedClassName=".CardOfferDetails" syncable="YES">
+    <entity name="CardOfferData" representedClassName=".CardOfferData" syncable="YES">
         <attribute name="card_name" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="image_url" optional="YES" attributeType="String"/>
         <attribute name="max_discount" optional="YES" attributeType="String"/>
         <attribute name="offer_desc" optional="YES" attributeType="String"/>
         <attribute name="percentage" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="products" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductData" inverseName="card_offers" inverseEntity="ProductData"/>
     </entity>
-    <entity name="CategoryDetails" representedClassName=".CategoryDetails" syncable="YES">
+    <entity name="CategoryData" representedClassName=".CategoryData" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="layout" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="products" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductData" inverseName="category" inverseEntity="ProductData"/>
     </entity>
-    <entity name="ProductDetails" representedClassName=".ProductDetails" syncable="YES">
-        <attribute name="card_offer_ids" optional="YES" attributeType="Binary"/>
-        <attribute name="category_id" optional="YES" attributeType="String"/>
+    <entity name="ProductData" representedClassName=".ProductData" syncable="YES">
+        <attribute name="colors" optional="YES" attributeType="Binary"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="image_url" optional="YES" attributeType="String"/>
@@ -24,5 +25,7 @@
         <attribute name="price" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="rating" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="review_count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="card_offers" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CardOfferData" inverseName="products" inverseEntity="CardOfferData"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CategoryData" inverseName="products" inverseEntity="CategoryData"/>
     </entity>
 </model>

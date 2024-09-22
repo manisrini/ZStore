@@ -1,5 +1,5 @@
 //
-//  CardOfferDetails+CoreDataProperties.swift
+//  CardOfferData+CoreDataProperties.swift
 //  ZStore
 //
 //  Created by Manikandan on 22/09/24.
@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-extension CardOfferDetails {
+extension CardOfferData {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<CardOfferDetails> {
-        return NSFetchRequest<CardOfferDetails>(entityName: "CardOfferDetails")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<CardOfferData> {
+        return NSFetchRequest<CardOfferData>(entityName: "CardOfferData")
     }
 
     @NSManaged public var card_name: String?
@@ -22,9 +22,10 @@ extension CardOfferDetails {
     @NSManaged public var max_discount: String?
     @NSManaged public var offer_desc: String?
     @NSManaged public var percentage: Double
+    @NSManaged public var products: ProductData?
 
 }
 
-extension CardOfferDetails : Identifiable {
+extension CardOfferData : Identifiable {
 
 }

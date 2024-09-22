@@ -1,5 +1,5 @@
 //
-//  CategoryDetails+CoreDataClass.swift
+//  CardOfferData+CoreDataClass.swift
 //  ZStore
 //
 //  Created by Manikandan on 22/09/24.
@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 
-public class CategoryDetails: NSManagedObject {
+public class CardOfferData: NSManagedObject {
 
 }

@@ -10,6 +10,7 @@ import CoreData
 
 class DBManager{
     let dbName = "AppDB"
+    static let shared = DBManager()
     
     public lazy var persistentContainer : NSPersistentContainer = {
         let container = NSPersistentContainer(name: dbName)
@@ -21,14 +22,12 @@ class DBManager{
         return container
     }()
     
-    func saveContext(){
-        let context = persistentContainer.viewContext
-        if context.hasChanges{
-            do{
-                try context.save()
-            } catch{
-                print(error.localizedDescription)
-            }
+    func saveContext(managedObjectContext: NSManagedObjectContext, completionHandler: @escaping(Result<String,Error>) -> Void){
+        do {
+            try managedObjectContext.save()
+            completionHandler(.success("Saved to DB Successfully"))
+        } catch let error {
+            completionHandler(.failure(error))
         }
     }
     

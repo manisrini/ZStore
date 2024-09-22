@@ -40,7 +40,6 @@ public class Utils {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 1
-        print(formatter.string(from: NSNumber(value: number)) ?? "\(number)")
         return formatter.string(from: NSNumber(value: number)) ?? "\(number)"
     }
 //

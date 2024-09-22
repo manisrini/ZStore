@@ -28,7 +28,6 @@ class OfferSectionFooterView : UICollectionReusableView{
     
     private let valueLabel : UILabel = {
         let label = UILabel()
-        label.text = "HDFC Credit card"
         label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Blue.rawValue)
         label.font = .systemFont(ofSize: 15)
         return label
@@ -45,6 +44,7 @@ class OfferSectionFooterView : UICollectionReusableView{
     }()
     
     @objc func didTapButton(){
+        self.isHidden = true
         delegate?.didTapButton()
     }
 
@@ -88,7 +88,12 @@ class OfferSectionFooterView : UICollectionReusableView{
         }
     }
     
-    func config(value : String){
-        self.valueLabel.text = value
+    func config(value : String?){
+        if let _value = value{
+            self.valueLabel.text = _value
+            self.isHidden = false
+        }else{
+            self.isHidden = true
+        }
     }
 }

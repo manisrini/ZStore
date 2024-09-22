@@ -9,6 +9,7 @@ import Foundation
 
 class LinearLayoutCellViewModel
 {
+    let id : String
     let imageUrl : String
     let name : String
     let reviewCount : Int
@@ -17,7 +18,8 @@ class LinearLayoutCellViewModel
     let desc : String
     let colors : [String]?
     
-    init(imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String, colors: [String]?) {
+    init(id : String,imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String, colors: [String]?) {
+        self.id = id
         self.name = name
         self.rating = rating
         self.reviewCount = reviewCount

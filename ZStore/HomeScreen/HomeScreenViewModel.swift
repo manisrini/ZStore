@@ -25,9 +25,13 @@ class HomeScreenViewModel{
     
     var allProducts : [Product] = []
     var availableCategories : [ProductCategory] = []
-    var availableOffers : [CardOffer] = []
+    var allOffers : [CardOffer] = []
+    
+    var selectedOffer : CardOffer?
     var selectedCategory : ProductCategory?
-    var selectedCategoryProducts : [Product] = []
+    var availableProducts : [Product] = []
+    var availableProductsWithOffers : [Product] = []
+    var availableOffers : [CardOffer] = []
     
     func fetchData(completion : @escaping() -> Void){
         let url = "https://raw.githubusercontent.com/princesolomon/zstore/main/data.json"
@@ -48,14 +52,15 @@ class HomeScreenViewModel{
     
     private func createProductModel(_ response : HomeScreenResponse){
         self.availableCategories = response.category ?? []
-        self.availableOffers = response.card_offers ?? []
+        self.allOffers = response.card_offers ?? []
         self.allProducts = response.products ?? []
         
         if let _selectedCategory = response.category?.first{
             self.setSelectedCategory(_selectedCategory)
         }
         
-        self.setSelectedCategoryProducts()
+        self.updateProducts()
+        self.setSelectedCategoryOffers()
         
         /*var formattedProducts : [ProductModel] = []
         
@@ -102,21 +107,73 @@ class HomeScreenViewModel{
         }
         return currentProductOffers
     }*/
+    func removeOffer(){
+        self.selectedOffer = nil
+    }
+    
     private func setSelectedCategory(_ category : ProductCategory){
         self.selectedCategory = category
     }
 
     
-    func setSelectedCategoryProducts(){
+    func updateProducts(){
         if let _selectedCategoryId = self.selectedCategory?.id{
-            self.selectedCategoryProducts = allProducts.filter { product in
+            self.availableProducts = allProducts.filter { product in
                 product.category_id ?? "" == _selectedCategoryId
             }
         }
+        
+        self.updateProductsWithOffers()
     }
     
-    func getProductCountForSelectedCategory() -> Int{
-        return self.selectedCategoryProducts.count
+    func updateProductsWithOffers(){
+        if let _selectedOffer = self.selectedOffer{
+            let filteredProducts = self.availableProducts.filter { product in
+                let cardOfferIds = product.card_offer_ids ?? []
+                return cardOfferIds.contains(_selectedOffer.id)
+            }
+            self.availableProductsWithOffers = filteredProducts
+        }
+        
+    }
+    
+    func setSelectedCategoryOffers(){
+        var tempOffers : [CardOffer] = []
+        
+        if let _selectedCategoryId = self.selectedCategory?.id{
+            for product in availableProducts {
+                let productOfferIds = product.card_offer_ids ?? []
+                
+                for offerId in productOfferIds{
+                    if !tempOffers.contains(where: { cardOffer in
+                        cardOffer.id == offerId
+                    }){
+                        if let _offer = self.getOffer(id: offerId){
+                            tempOffers.append(_offer)
+                        }
+//
+//                        if selectedCategoryOffers.count == allOffers.count{
+//                            break
+//                        }
+                    }
+                }
+            }
+        }
+        
+        self.availableOffers = tempOffers
+    }
+    
+    func getOffer(id : String) -> CardOffer?{
+        return self.allOffers.filter { offer in
+            offer.id == id
+        }.first
+    }
+    
+    func getProductCount() -> Int{
+        if selectedOffer == nil{
+            return self.availableProducts.count
+        }
+        return self.availableProductsWithOffers.count
     }
     
     func getCategories() -> [Tag]{
@@ -124,9 +181,9 @@ class HomeScreenViewModel{
         
         for (index,category) in self.availableCategories.enumerated() {
             if index == 0{
-                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: true))
+                categories.append(Tag(id: category.id , text: category.name ?? "", isSelected: true))
             }else{
-                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: false))
+                categories.append(Tag(id: category.id, text: category.name ?? "", isSelected: false))
             }
         }
         
@@ -143,8 +200,13 @@ class HomeScreenViewModel{
     }
     
     func createLinearLayoutProductModel(_ index : Int) -> LinearLayoutCellViewModel{
-        let product = self.selectedCategoryProducts[index]
+        var product = self.availableProducts[index]
+        if selectedOffer != nil{
+            product = self.availableProductsWithOffers[index]
+        }
+        
         return LinearLayoutCellViewModel(
+            id : product.id,
             imageUrl: product.image_url ?? "",
             name: product.name ?? "",
             reviewCount: product.review_count ?? 0,

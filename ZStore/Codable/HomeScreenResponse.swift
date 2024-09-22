@@ -14,13 +14,13 @@ struct HomeScreenResponse : Codable{
 }
 
 struct ProductCategory : Codable{
-    let id : String?
+    let id : String
     let name : String?
     let layout : String?
 }
 
 struct CardOffer : Codable{
-    let id : String?
+    let id : String
     let percentage : Double?
     let offer_desc : String?
     let card_name : String?
@@ -29,7 +29,7 @@ struct CardOffer : Codable{
 }
 
 struct Product : Codable{
-    let id : String?
+    let id : String
     let name : String?
     let rating : Double?
     let review_count : Int?

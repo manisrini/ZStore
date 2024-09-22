@@ -18,6 +18,7 @@ class HomeScreenVC: UIViewController {
     private var filterView = FilterView()
     var filterViewHeightConstraint: Constraint?
     private var baseView = UIView()
+    private var offerSectionFooterView : OfferSectionFooterView?
     
     lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
 
@@ -146,8 +147,7 @@ class HomeScreenVC: UIViewController {
                 }
             }
         }else{
-            self.viewModel.setSelectedCategoryProducts()
-            self.storeCollectionView.reloadSections(IndexSet(integer: 1))
+            self.storeCollectionView.reloadData()
         }
     }
     
@@ -158,6 +158,10 @@ class HomeScreenVC: UIViewController {
     private func configStickyHeaderView(){
         let items = self.viewModel.getCategories()
         self.filterView.updateView(items)
+    }
+    
+    private func reloadSection(at section : Int){
+        self.storeCollectionView.reloadSections(IndexSet(integer: section))
     }
     
     private func createCompositionalLayout() -> UICollectionViewCompositionalLayout{
@@ -198,8 +202,16 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
         2
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 80)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 60)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if indexPath.section == 0{ //Section 1 header
+        if indexPath.section == 0{ // offer section header
             if kind == UICollectionView.elementKindSectionHeader{
                 if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionHeaderView", for: indexPath) as? OfferSectionHeaderView{
                     return headerView
@@ -208,55 +220,60 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
             
             else if kind == UICollectionView.elementKindSectionFooter{
                 if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionFooterView", for: indexPath) as? OfferSectionFooterView{
+                    self.offerSectionFooterView = footerView
+                    footerView.config(value: self.viewModel.selectedOffer?.card_name)
                     footerView.delegate = self
                     return footerView
                 }
-
             }
         }
         
         return UICollectionReusableView()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 180.0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 60)
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 0{ // Offers section
+            let selectedOffer = self.viewModel.availableOffers[indexPath.row]
+            self.viewModel.selectedOffer = selectedOffer
+            self.offerSectionFooterView?.config(value: selectedOffer.card_name)
+            self.viewModel.updateProductsWithOffers()
+            self.reloadSection(at: 1)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0{
             return self.viewModel.availableOffers.count
+        }else if section == 1{
+            return self.viewModel.getProductCount()
         }
-        return self.viewModel.getProductCountForSelectedCategory()
+        return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-                
-        if indexPath.section == 0{ // OfferSection
-            if let offerCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.OfferCell, for: indexPath) as? OfferCollectionViewCell{
-                let offerVM = self.viewModel.createOfferCellViewModel(indexPath.row)
-                offerCell.config(viewModel: offerVM)
-                return offerCell
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                    
+            if indexPath.section == 0{ // OfferSection
+                if let offerCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.OfferCell, for: indexPath) as? OfferCollectionViewCell{
+                    let offerVM = self.viewModel.createOfferCellViewModel(indexPath.row)
+                    offerCell.config(viewModel: offerVM)
+                    return offerCell
+                }
             }
-        }
-        else if indexPath.section == 1{
-            if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
-                let productVM = self.viewModel.createLinearLayoutProductModel(indexPath.row)
-                linearCell.config(viewModel: productVM)
-                return linearCell
+            else if indexPath.section == 1{
+                if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
+                    let productVM = self.viewModel.createLinearLayoutProductModel(indexPath.row)
+                    linearCell.config(viewModel: productVM)
+                    return linearCell
+                }
             }
+            
+    //        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Test", for: indexPath) as? Test{
+    //            cell.backgroundColor = .red
+    //            cell.layer.cornerRadius = 8
+    //            return cell
+    //        }
+            return UICollectionViewCell()
         }
-        
-//        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Test", for: indexPath) as? Test{
-//            cell.backgroundColor = .red
-//            cell.layer.cornerRadius = 8
-//            return cell
-//        }
-        return UICollectionViewCell()
-    }
     
 }
 
@@ -264,15 +281,18 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
 extension HomeScreenVC : FilterViewDelegate{
     func didChangeCategory(item: Tag) {
                 
-        if let newSelectedCategory = self.viewModel.availableCategories.filter({$0.id ?? "" == item.id}).first{
+        if let newSelectedCategory = self.viewModel.availableCategories.filter({$0.id == item.id}).first{
             self.viewModel.selectedCategory = newSelectedCategory
         }
+        self.viewModel.updateProducts()
+        self.viewModel.setSelectedCategoryOffers()
         self.fetchProducts()
     }
 }
 
 extension HomeScreenVC : OfferSectionFooterViewDelegate{
     func didTapButton() {
-        
+        self.viewModel.removeOffer()
+        self.reloadSection(at: 1)
     }
 }

@@ -157,10 +157,6 @@ class LinearLayoutCell : UICollectionViewCell{
             make.top.equalTo(self.contentView)
 //            make.height.equalTo(200)
         }
-
-        
-        productPreview.loadImage(url: "https://m.media-amazon.com/images/I/61IiuWQcVjL._AC_UL150_FMwebp_QL65_.jpg")
-
     }
 
     
@@ -176,4 +172,6 @@ class LinearLayoutCell : UICollectionViewCell{
         }
         self.productPreview.loadImage(url: viewModel.imageUrl)
     }
+    
+    
 }

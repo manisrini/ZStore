@@ -17,7 +17,7 @@ extension String
         if let boldRegex = try? NSRegularExpression(pattern: boldPattern){
             let matches = boldRegex.matches(in: attributedString.string, range: NSRange(location: 0, length: attributedString.length))
             
-            for match in matches.reversed() {
+            for match in matches{
                 let boldTextRange = match.range(at: 1)
                 let boldText = (attributedString.string as NSString).substring(with: boldTextRange)
 
@@ -46,7 +46,9 @@ extension String
                 if let url = URL(string: linkURL){
                     let linkAttributedString = NSAttributedString(string: linkText,attributes: [
                         .link : url,
-                        .foregroundColor : UIColor.systemBlue
+                        .foregroundColor : UIColor.systemBlue,
+                        .underlineStyle : NSUnderlineStyle.single.rawValue,
+                        .underlineColor : UIColor.systemBlue
                     ])
                     
                     attributedString.replaceCharacters(in: match.range, with: linkAttributedString)

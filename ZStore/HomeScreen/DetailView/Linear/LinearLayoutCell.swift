@@ -17,7 +17,6 @@ class LinearLayoutCell : UICollectionViewCell{
     
     private let title : UILabel = {
         let label = UILabel()
-        label.text = "One plus 11 5G(Titanium Black, 16 GB Ram, 256GB Storage)"
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .fontStyle(size: 18, weight: 600)
@@ -35,7 +34,6 @@ class LinearLayoutCell : UICollectionViewCell{
     
     private let priceLbl : UILabel = {
         let label = UILabel()
-        label.text = "₹62,999"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.font = .fontStyle(size: 20, weight: 600)
@@ -44,7 +42,6 @@ class LinearLayoutCell : UICollectionViewCell{
     
     private let descLbl : UILabel = {
         let label = UILabel()
-        label.text = "Free Delivery | Get i by Sunday, 5 November"
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping

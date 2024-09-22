@@ -27,91 +27,88 @@ class HomeScreenViewModel{
     var availableCategories : [ProductCategory] = []
     var allOffers : [CardOffer] = []
     
-    var selectedOffer : CardOffer?
-    var selectedCategory : ProductCategory?
+    var selectedOffer : CardOfferData?
+    var selectedCategory : CategoryData?
     var availableProducts : [Product] = []
     var availableProductsWithOffers : [Product] = []
     var availableOffers : [CardOffer] = []
     
     func fetchData(completion : @escaping() -> Void){
-        let url = "https://raw.githubusercontent.com/princesolomon/zstore/main/data.json"
         
-        NetworkManager.shared.getData(urlStr: url) { [weak self] data, error in
-            guard let _data = data else{ return }
+        if HomeScreenDataManager.shared.hasDataInDB(){            
+            completion()
+        }else{
             
-            do{
-                let decoder = JSONDecoder()
-                let response = try decoder.decode(HomeScreenResponse.self, from: _data)
-                self?.createProductModel(response)
-                completion()
-            }catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    private func createProductModel(_ response : HomeScreenResponse){
-        self.availableCategories = response.category ?? []
-        self.allOffers = response.card_offers ?? []
-        self.allProducts = response.products ?? []
-        
-        if let _selectedCategory = response.category?.first{
-            self.setSelectedCategory(_selectedCategory)
-        }
-        
-        self.updateProducts()
-        self.setSelectedCategoryOffers()
-        
-        /*var formattedProducts : [ProductModel] = []
-        
-        if let _products = response.products{
-            for product in _products {
-                let category = self.getCategory(product: product, allCategories: response.category ?? [])
-                let cardOffers = self.getCardOffers(product: product, allCardOffers: response.card_offers ?? [])
-                let formattedProduct = ProductModel(
-                    id: product.id ?? "",
-                    name: product.name ?? "",
-                    rating: product.rating,
-                    review_count: product.review_count,
-                    price: product.price ?? 0.0,
-                    category: category,
-                    cardOffers: cardOffers,
-                    image_url: product.image_url,
-                    description: product.description)
-                formattedProducts.append(formattedProduct)
-            }
-        }*/
-
-    }
-    
-   /* private func getCategory(product : Product,allCategories : [ProductCategory]) -> ProductCategory?{
-        if let _categoryId = product.category_id{
-            let filteredCategory = allCategories.filter { category in
-                category.id ?? "" == _categoryId
-            }.first
-            return filteredCategory
-        }
-        return nil
-    }
-    
-    private func getCardOffers(product : Product,allCardOffers : [CardOffer]) -> [CardOffer]?{
-        let currentProductCardOffersIds = product.card_offer_ids ?? []
-        var currentProductOffers : [CardOffer] = []
-        
-        for offer in allCardOffers {
-            if let _offerId = offer.id{
-                if currentProductCardOffersIds.contains(_offerId){
-                    currentProductOffers.append(offer)
+            let url = "https://raw.githubusercontent.com/princesolomon/zstore/main/data.json"
+            
+            NetworkManager.shared.getData(urlStr: url) { [weak self] data, error in
+                guard let _data = data else{ return }
+                
+                do{
+                    let decoder = JSONDecoder()
+                    let response = try decoder.decode(HomeScreenResponse.self, from: _data)
+                    self?.saveData(response: response)
+                    completion()
+                }catch {
+                    print(error.localizedDescription)
                 }
             }
         }
-        return currentProductOffers
-    }*/
+        
+    }
+    
+//    private func createProductModel(_ response : HomeScreenResponse){
+//        self.availableCategories = response.category ?? []
+////        self.allOffers = response.card_offers ?? []
+////        self.allProducts = response.products ?? []
+////        
+////        if let _selectedCategory = response.category?.first{
+////            self.setSelectedCategory(_selectedCategory)
+////        }
+//        
+////        self.updateProducts()
+////        self.updateOffers()
+//        
+//           self.saveData()
+//    }
+//    
+    private func saveData(response : HomeScreenResponse){ ///Save data in database
+
+        HomeScreenDataManager.shared.saveCategories(categories: response.category ?? []) { result in
+            switch result {
+            case .success(_):
+                print("categories saved")
+            case .failure(_):
+                print("categories failed")
+            }
+        }
+        
+        
+        HomeScreenDataManager.shared.saveOffers(cardOffers: response.card_offers ?? [], completionHandler: { result in
+            switch result {
+            case .success(_):
+                print("offers saved")
+            case .failure(_):
+                print("offers failed")
+            }
+
+        })
+        
+        HomeScreenDataManager.shared.saveProducts(products: response.products ?? []) { result in
+            switch result {
+            case .success(_):
+                print("products saved")
+            case .failure(_):
+                print("products failed")
+            }
+        }
+    }
+    
     func removeOffer(){
         self.selectedOffer = nil
     }
     
-    private func setSelectedCategory(_ category : ProductCategory){
+    private func setSelectedCategory(_ category : CategoryData){
         self.selectedCategory = category
     }
 
@@ -131,14 +128,14 @@ class HomeScreenViewModel{
         if let _selectedOffer = self.selectedOffer{
             let filteredProducts = self.availableProducts.filter { product in
                 let cardOfferIds = product.card_offer_ids ?? []
-                return cardOfferIds.contains(_selectedOffer.id)
+                return cardOfferIds.contains(_selectedOffer.id ?? "")
             }
             self.availableProductsWithOffers = filteredProducts
         }
         
     }
     
-    func setSelectedCategoryOffers(){
+    func updateOffers(){
         var tempOffers : [CardOffer] = []
         
         if let _selectedCategoryId = self.selectedCategory?.id{
@@ -177,22 +174,21 @@ class HomeScreenViewModel{
         return self.availableProductsWithOffers.count
     }
     
-    func getCategories() -> [Tag]{
+    func getCategories(availableCategories : [CategoryData]) -> [Tag]{
         var categories : [Tag] = []
         
-        for (index,category) in self.availableCategories.enumerated() {
+        for (index,category) in availableCategories.enumerated() {
             if index == 0{
-                categories.append(Tag(id: category.id , text: category.name ?? "", isSelected: true))
+                categories.append(Tag(id: category.id ?? "" , text: category.name ?? "", isSelected: true))
             }else{
-                categories.append(Tag(id: category.id, text: category.name ?? "", isSelected: false))
+                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: false))
             }
         }
         
         return categories
     }
     
-    func createOfferCellViewModel(_ index : Int) -> OfferCellViewModel{
-        let offer = self.availableOffers[index]
+    func createOfferCellViewModel(_ offer : CardOfferData) -> OfferCellViewModel{
         return OfferCellViewModel(
             titleText: offer.card_name ?? "",
             subtitleText: offer.offer_desc ?? "",
@@ -200,20 +196,66 @@ class HomeScreenViewModel{
             imageUrl: offer.image_url)
     }
     
-    func createLinearLayoutProductModel(_ index : Int) -> LinearLayoutCellViewModel{
-        var product = self.availableProducts[index]
-        if selectedOffer != nil{
-            product = self.availableProductsWithOffers[index]
-        }
+    func createLinearLayoutProductModel(product : ProductData) -> LinearLayoutCellViewModel{
+//        var product = self.availableProducts[index]
+//        if selectedOffer != nil{
+//            product = self.availableProductsWithOffers[index]
+//        }
         
         return LinearLayoutCellViewModel(
-            id : product.id,
+            id : product.id ?? "",
             imageUrl: product.image_url ?? "",
             name: product.name ?? "",
-            reviewCount: product.review_count ?? 0,
-            rating: product.rating ?? 0.0,
+            reviewCount: Int(product.review_count),
+            rating: product.rating,
+            price: Double(product.price),
+            desc: product.desc ?? "",
+            colors: product.colors?.toArray())
+    }
+    
+}
+
+
+/*var formattedProducts : [ProductModel] = []
+
+if let _products = response.products{
+    for product in _products {
+        let category = self.getCategory(product: product, allCategories: response.category ?? [])
+        let cardOffers = self.getCardOffers(product: product, allCardOffers: response.card_offers ?? [])
+        let formattedProduct = ProductModel(
+            id: product.id ?? "",
+            name: product.name ?? "",
+            rating: product.rating,
+            review_count: product.review_count,
             price: product.price ?? 0.0,
-            desc: product.description ?? "",
-            colors: product.colors)
+            category: category,
+            cardOffers: cardOffers,
+            image_url: product.image_url,
+            description: product.description)
+        formattedProducts.append(formattedProduct)
     }
 }
+
+ private func getCategory(product : Product,allCategories : [ProductCategory]) -> ProductCategory?{
+if let _categoryId = product.category_id{
+    let filteredCategory = allCategories.filter { category in
+        category.id ?? "" == _categoryId
+    }.first
+    return filteredCategory
+}
+return nil
+}
+
+private func getCardOffers(product : Product,allCardOffers : [CardOffer]) -> [CardOffer]?{
+let currentProductCardOffersIds = product.card_offer_ids ?? []
+var currentProductOffers : [CardOffer] = []
+
+for offer in allCardOffers {
+    if let _offerId = offer.id{
+        if currentProductCardOffersIds.contains(_offerId){
+            currentProductOffers.append(offer)
+        }
+    }
+}
+return currentProductOffers
+}*/

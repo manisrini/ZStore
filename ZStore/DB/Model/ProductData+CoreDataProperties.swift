@@ -23,23 +23,13 @@ extension ProductData {
     @NSManaged public var name: String?
     @NSManaged public var price: Int64
     @NSManaged public var rating: Double
-    @NSManaged public var review_count: Int64
+    @NSManaged public var review_count: Int32
     @NSManaged public var colors: Data?
-    @NSManaged public var card_offers: CardOfferData?
-    @NSManaged public var category: CategoryData?
+    @NSManaged public var card_offers_ids: Data?
+    @NSManaged public var category_id: String?
 
 }
 
 extension ProductData : Identifiable {
-
-}
-
-
-extension ProductData {
-    @objc(addCardOffersObject:)
-    @NSManaged public func addToCardOffers(_ value: [CardOfferData])
-
-    @objc(addCardOffers:)
-    @NSManaged public func addToCardOffers(_ values: NSSet)
 
 }

@@ -9,9 +9,10 @@ import UIKit
 import SnapKit
 import ZChip
 import DesignSystem
+import CoreData
 import SwiftUI
 
-class HomeScreenVC: UIViewController {
+final class HomeScreenVC: UIViewController {
     
     var viewModel = HomeScreenViewModel()
     
@@ -20,6 +21,10 @@ class HomeScreenVC: UIViewController {
     private var baseView = UIView()
     private var offerSectionFooterView : OfferSectionFooterView?
     
+    var categoryFetchedResultsController: NSFetchedResultsController<CategoryData>?
+    var productFetchedResultsController: NSFetchedResultsController<ProductData>?
+    var cardOfferFetchedResultsController: NSFetchedResultsController<CardOfferData>?
+
     lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
 
     
@@ -33,6 +38,11 @@ class HomeScreenVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let directoryLocation = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).last {
+                    print("Core Data Path : Documents Directory: \(directoryLocation)Application Support")
+         }
+
         self.setNavStyles()
         self.setUpSearchBar()
         self.setupBaseView()
@@ -41,7 +51,7 @@ class HomeScreenVC: UIViewController {
         self.loadFabBtn()
         self.fetchProducts()
     }
-    
+            
     private func setNavStyles(){
         let label = UILabel()
         label.text = "Store"
@@ -119,7 +129,7 @@ class HomeScreenVC: UIViewController {
     private func setupCollectionView(){
         self.storeCollectionView.dataSource = self
         self.storeCollectionView.delegate = self
-        self.storeCollectionView.collectionViewLayout = createCompositionalLayout()
+        self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
         self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
         self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
         
@@ -139,60 +149,40 @@ class HomeScreenVC: UIViewController {
     }
         
     private func fetchProducts(){
-        if self.viewModel.allProducts.count == 0{
-            self.viewModel.fetchData {
-                DispatchQueue.main.async {
-                    self.configStickyHeaderView()
-                    self.storeCollectionView.reloadData()
+        
+        self.viewModel.fetchData { [weak self] in
+            
+            DispatchQueue.main.async {
+                
+                self?.categoryFetchedResultsController = HomeScreenDataManager.shared.setupCategoriesFetchedResultsController()
+                self?.cardOfferFetchedResultsController = HomeScreenDataManager.shared.setupCardOffersFetchedResultsController()
+                
+                if let categories = self?.categoryFetchedResultsController?.fetchedObjects,let firstCategory = categories.first,let id = firstCategory.id{
+                    self?.productFetchedResultsController =  HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: id
+                    )
                 }
+                
+                self?.configStickyHeaderView()
+                self?.storeCollectionView.reloadData()
             }
-        }else{
-            self.storeCollectionView.reloadData()
         }
     }
+    
     
     private func getNewProducts(){
         self.storeCollectionView.reloadData()
     }
         
     private func configStickyHeaderView(){
-        let items = self.viewModel.getCategories()
-        self.filterView.updateView(items)
+        if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
+            let items = self.viewModel.getCategories(availableCategories: availableCategories)
+            self.filterView.updateView(items)
+        }
+        
     }
     
     private func reloadSection(at section : Int){
         self.storeCollectionView.reloadSections(IndexSet(integer: section))
-    }
-    
-    private func createCompositionalLayout() -> UICollectionViewCompositionalLayout{
-        
-        let section1GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        section1GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 12)
-        let section1Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),heightDimension: .absolute(120)), subitems: [section1GroupItem])
-        let section1 = NSCollectionLayoutSection(group: section1Group)
-        let section1Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        let section1Footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
-        section1.boundarySupplementaryItems = [section1Header,section1Footer]
-        section1.orthogonalScrollingBehavior = .continuous
-        
-        
-        let section2GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 12, bottom: 20, trailing: 0)
-        let section2Group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .estimated(250)), subitems: [section2GroupItem])
-        let section2 = NSCollectionLayoutSection(group: section2Group)
-        
-
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnv in
-            switch sectionIndex{
-            case 0:
-                return section1
-            case 1:
-                return section2
-            default:
-                return section1
-            }
-        }
-        return layout
     }
 }
 
@@ -233,45 +223,45 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0{ // Offers section
-            let selectedOffer = self.viewModel.availableOffers[indexPath.row]
-            self.viewModel.selectedOffer = selectedOffer
-            self.offerSectionFooterView?.config(value: selectedOffer.card_name)
-            self.viewModel.updateProductsWithOffers()
-            self.reloadSection(at: 1)
+            if  let selectedOffer = self.cardOfferFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                self.viewModel.selectedOffer = selectedOffer
+                self.offerSectionFooterView?.config(value: selectedOffer.card_name)
+                let selectedCategoryId = self.viewModel.selectedCategory?.id ?? ""
+                self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: selectedCategoryId, cardOfferId: selectedOffer.id)
+                self.reloadSection(at: 1)
+            }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0{
-            return self.viewModel.availableOffers.count
-        }else if section == 1{
-            return self.viewModel.getProductCount()
+        if section == 0 {
+            return cardOfferFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
+        } else {
+            return productFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
         }
-        return 0
     }
     
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
                     
             if indexPath.section == 0{ // OfferSection
                 if let offerCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.OfferCell, for: indexPath) as? OfferCollectionViewCell{
-                    let offerVM = self.viewModel.createOfferCellViewModel(indexPath.row)
-                    offerCell.config(viewModel: offerVM)
-                    return offerCell
+                    if let cardOffer = cardOfferFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                        let offerVM = self.viewModel.createOfferCellViewModel(cardOffer)
+                        offerCell.config(viewModel: offerVM)
+                        return offerCell
+                    }
                 }
             }
             else if indexPath.section == 1{
                 if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
-                    let productVM = self.viewModel.createLinearLayoutProductModel(indexPath.row)
-                    linearCell.config(viewModel: productVM)
-                    return linearCell
+                    if let product = productFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                        let productVM = self.viewModel.createLinearLayoutProductModel(product: product)
+                        linearCell.config(viewModel: productVM)
+                        return linearCell
+                    }
                 }
             }
             
-    //        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Test", for: indexPath) as? Test{
-    //            cell.backgroundColor = .red
-    //            cell.layer.cornerRadius = 8
-    //            return cell
-    //        }
             return UICollectionViewCell()
         }
     
@@ -281,12 +271,17 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
 extension HomeScreenVC : FilterViewDelegate{
     func didChangeCategory(item: Tag) {
                 
-        if let newSelectedCategory = self.viewModel.availableCategories.filter({$0.id == item.id}).first{
-            self.viewModel.selectedCategory = newSelectedCategory
+        if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
+            if let newSelectedCategory = availableCategories.filter({$0.id ?? "" == item.id}).first{
+                self.viewModel.selectedCategory = newSelectedCategory
+            }
+    //        self.viewModel.updateProducts()
+    //        self.viewModel.updateOffers()
+    //        self.fetchProducts()
+            self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: item.id)
+            self.storeCollectionView.reloadData()
         }
-        self.viewModel.updateProducts()
-        self.viewModel.setSelectedCategoryOffers()
-        self.fetchProducts()
+        
     }
 }
 
@@ -294,5 +289,11 @@ extension HomeScreenVC : OfferSectionFooterViewDelegate{
     func didTapButton() {
         self.viewModel.removeOffer()
         self.reloadSection(at: 1)
+    }
+}
+
+extension HomeScreenVC : NSFetchedResultsControllerDelegate{
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        printContent("change content")
     }
 }

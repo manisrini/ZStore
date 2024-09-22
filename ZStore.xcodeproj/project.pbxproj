@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A00F18A2CA002550099AD9D /* String+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00F1892CA002550099AD9D /* String+ext.swift */; };
 		2A153A7E2C9E8F690009761F /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A7D2C9E8F690009761F /* RadioButtonView.swift */; };
 		2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */; };
 		2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */; };
@@ -55,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A00F1892CA002550099AD9D /* String+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ext.swift"; sourceTree = "<group>"; };
 		2A153A7D2C9E8F690009761F /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
 		2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCellViewModel.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				2A44413B2C9D7C320003A9C5 /* Constants.swift */,
+				2A00F1892CA002550099AD9D /* String+ext.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */,
 				2A4BF4192C9BEC4C00C96C35 /* SceneDelegate.swift in Sources */,
 				2A44413C2C9D7C320003A9C5 /* Constants.swift in Sources */,
+				2A00F18A2CA002550099AD9D /* String+ext.swift in Sources */,
 				2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

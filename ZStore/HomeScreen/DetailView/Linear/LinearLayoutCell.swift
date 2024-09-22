@@ -162,7 +162,6 @@ class LinearLayoutCell : UICollectionViewCell{
     
     func config(viewModel : LinearLayoutCellViewModel){
         self.title.text = viewModel.name
-        self.descLbl.text = viewModel.desc
         self.priceLbl.text = "₹\(viewModel.price)"
         self.reviewCountLbl.text = "(\(viewModel.reviewCount))"
         
@@ -171,6 +170,9 @@ class LinearLayoutCell : UICollectionViewCell{
             self.colorsView.setColors(colors: _colors)
         }
         self.productPreview.loadImage(url: viewModel.imageUrl)
+        
+        self.descLbl.attributedText = viewModel.desc.renderMarkDownText()
+
     }
     
     

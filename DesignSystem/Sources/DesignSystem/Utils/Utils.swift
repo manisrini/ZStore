@@ -10,9 +10,9 @@ import UIKit
 
 public class Utils {
     
-    public static let shared = Utils()
+//    public static let shared = Utils()
     
-    public func hexStringToUIColor (hex:String) -> UIColor {
+    public static func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         
         if (cString.hasPrefix("#"))
@@ -36,7 +36,7 @@ public class Utils {
         )
     }
     
-    func formatDecimal(_ number: Double) -> String {
+    static func formatDecimal(_ number: Double) -> String {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 1

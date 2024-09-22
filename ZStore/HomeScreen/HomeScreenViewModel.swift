@@ -126,6 +126,7 @@ class HomeScreenViewModel{
         self.updateProductsWithOffers()
     }
     
+    
     func updateProductsWithOffers(){
         if let _selectedOffer = self.selectedOffer{
             let filteredProducts = self.availableProducts.filter { product in

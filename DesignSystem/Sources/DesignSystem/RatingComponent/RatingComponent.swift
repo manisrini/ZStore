@@ -18,8 +18,8 @@ public struct RatingComponent: View {
     public var body: some View {
         HStack(spacing : 2){
             
-            Text(Utils.shared.formatDecimal(viewModel.rating))
-                .foregroundStyle(Color(Utils.shared.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
+            Text(Utils.formatDecimal(viewModel.rating))
+                .foregroundStyle(Color(Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
                 .font(.system(size: 13,weight: .semibold))
                 .frame(width: 25)
             

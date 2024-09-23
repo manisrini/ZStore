@@ -130,11 +130,13 @@ final class HomeScreenVC: UIViewController {
         self.storeCollectionView.dataSource = self
         self.storeCollectionView.delegate = self
         self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
+        
         self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
         self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
         
         self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifiers.OfferCell)
         self.storeCollectionView.register(LinearLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.LinearLayoutCell)
+        self.storeCollectionView.register(WaterfallLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.WaterfallLayoutCell)
         self.storeCollectionView.register(OfferSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "OfferSectionHeaderView")
         self.storeCollectionView.register(OfferSectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "OfferSectionFooterView")
         
@@ -146,6 +148,20 @@ final class HomeScreenVC: UIViewController {
             make.top.equalTo(self.filterView.snp.bottom)
             make.bottom.equalTo(self.baseView)
         }
+    }
+    
+    private func updateListLayout(category : CategoryData){
+        //Change the layout based on categotory
+        if let listLayout = category.layout{
+            if listLayout.lowercased() == ListLayout.Linear.rawValue.lowercased(){
+                self.viewModel.currentLayout = .Linear
+                self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
+            }else{
+                self.viewModel.currentLayout = .WaterFall
+                self.storeCollectionView.collectionViewLayout = WaterfallCompositionalFlowLayout.createCompositionalLayout()
+            }
+        }
+
     }
         
     private func fetchProducts(){
@@ -161,9 +177,14 @@ final class HomeScreenVC: UIViewController {
                     self?.viewModel.selectedCategory = firstCategory
                     self?.productFetchedResultsController =  HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: id
                     )
+                    self?.productFetchedResultsController?.delegate = self
+                    
+                    self?.updateListLayout(category: firstCategory)
                 }
                 
                 self?.configStickyHeaderView()
+                
+
                 self?.storeCollectionView.reloadData()
             }
         }
@@ -187,7 +208,7 @@ final class HomeScreenVC: UIViewController {
     }
     
     private func updateProducts(categoryId : String,cardOfferId : String?){
-        self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
+        self.`productFetchedResultsController` = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
     }
 }
 
@@ -258,11 +279,23 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
                 }
             }
             else if indexPath.section == 1{
-                if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
-                    if let product = productFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
-                        let productVM = self.viewModel.createLinearLayoutProductModel(product: product)
-                        linearCell.config(viewModel: productVM)
-                        return linearCell
+                if self.viewModel.currentLayout == .Linear{
+                    if let linearCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.LinearLayoutCell, for: indexPath) as? LinearLayoutCell{
+                        
+                        if let product = productFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                            let productVM = self.viewModel.createLinearLayoutProductModel(product: product)
+                            linearCell.config(with: productVM)
+                            return linearCell
+                        }
+                    }
+                }else{
+                    if let waterfallCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.WaterfallLayoutCell, for: indexPath) as? WaterfallLayoutCell{
+                        
+                        if let product = productFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                            let productVM = self.viewModel.createWaterfallLayoutProductModel(product: product)
+                            waterfallCell.config(with: productVM)
+                            return waterfallCell
+                        }
                     }
                 }
             }
@@ -279,12 +312,16 @@ extension HomeScreenVC : FilterViewDelegate{
         if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
             if let newSelectedCategory = availableCategories.filter({$0.id ?? "" == item.id}).first{
                 self.viewModel.selectedCategory = newSelectedCategory
+                self.updateListLayout(category: newSelectedCategory)
             }
     //        self.viewModel.updateProducts()
     //        self.viewModel.updateOffers()
     //        self.fetchProducts()
+
             self.updateProducts(categoryId: item.id, cardOfferId: nil)
             self.storeCollectionView.reloadData()
+            
+            self.storeCollectionView.collectionViewLayout.invalidateLayout()
         }
         
     }
@@ -301,7 +338,8 @@ extension HomeScreenVC : OfferSectionFooterViewDelegate{
 }
 
 extension HomeScreenVC : NSFetchedResultsControllerDelegate{
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        printContent("change content")
+    
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        printContent("content changed")
     }
 }

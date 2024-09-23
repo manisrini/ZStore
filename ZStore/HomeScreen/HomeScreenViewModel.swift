@@ -20,6 +20,10 @@ struct ProductModel{
     let description : String?
 }
 
+enum ListLayout : String {
+    case WaterFall
+    case Linear
+}
 
 class HomeScreenViewModel{
     
@@ -32,6 +36,7 @@ class HomeScreenViewModel{
     var availableProducts : [Product] = []
     var availableProductsWithOffers : [Product] = []
     var availableOffers : [CardOffer] = []
+    var currentLayout : ListLayout = .Linear
     
     func fetchData(completion : @escaping() -> Void){
         
@@ -57,21 +62,6 @@ class HomeScreenViewModel{
         
     }
     
-//    private func createProductModel(_ response : HomeScreenResponse){
-//        self.availableCategories = response.category ?? []
-////        self.allOffers = response.card_offers ?? []
-////        self.allProducts = response.products ?? []
-////        
-////        if let _selectedCategory = response.category?.first{
-////            self.setSelectedCategory(_selectedCategory)
-////        }
-//        
-////        self.updateProducts()
-////        self.updateOffers()
-//        
-//           self.saveData()
-//    }
-//    
     private func saveData(response : HomeScreenResponse){ ///Save data in database
 
         HomeScreenDataManager.shared.saveCategories(categories: response.category ?? []) { result in
@@ -197,10 +187,6 @@ class HomeScreenViewModel{
     }
     
     func createLinearLayoutProductModel(product : ProductData) -> LinearLayoutCellViewModel{
-//        var product = self.availableProducts[index]
-//        if selectedOffer != nil{
-//            product = self.availableProductsWithOffers[index]
-//        }
         
         return LinearLayoutCellViewModel(
             id : product.id ?? "",
@@ -211,6 +197,20 @@ class HomeScreenViewModel{
             price: Double(product.price),
             desc: product.desc ?? "",
             colors: product.colors?.toArray())
+    }
+    
+    func createWaterfallLayoutProductModel(product : ProductData) -> WaterfallLayoutCellViewModel{
+        
+        return WaterfallLayoutCellViewModel(
+            id: product.id ?? "",
+            imageUrl: product.image_url ?? "",
+            name: product.name ?? "",
+            reviewCount: Int(product.review_count),
+            rating: product.rating,
+            price: Double(product.price),
+            desc: product.desc ?? "",
+            isFavourite: false
+        )
     }
     
 }

@@ -8,35 +8,27 @@
 import UIKit
 import DesignSystem
 import SwiftUI
+import SDWebImage
 
 class LinearLayoutCell : UICollectionViewCell{
     
     static let identifier = CellIdentifiers.LinearLayoutCell
     private var colorsView = AvailableColorsView(viewModel: AvailableColorsViewModel(colors: []))
-    private var ratingView = RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: UIImage(named: "ratingFilled"), offImage: UIImage(named: "ratingNotFilled")))
+    private var ratingView = RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: UIImage(named: "ratingFilled"), offImage: UIImage(named: "ratingNotFilled"),reviewCount: 5))
     
     private let title : UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .fontStyle(size: 18, weight: 600)
+        label.font = .fontStyle(size: 18, weight: .semibold)
         return label
     }()
-    
-    private let reviewCountLbl : UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .fontStyle(size: 13, weight: 400)
-        label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
-        return label
-    }()
-    
+        
     private let priceLbl : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.font = .fontStyle(size: 20, weight: 600)
+        label.font = .fontStyle(size: 20, weight: .semibold)
         return label
     }()
     
@@ -45,7 +37,7 @@ class LinearLayoutCell : UICollectionViewCell{
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping
-        label.font = .fontStyle(size: 13, weight: 500)
+        label.font = .fontStyle(size: 13, weight: .regular)
         label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Tertiary.rawValue)
         return label
     }()
@@ -74,7 +66,7 @@ class LinearLayoutCell : UICollectionViewCell{
         let hostingColorsView = UIHostingController(rootView: colorsView)
         let hostingRatingView = UIHostingController(rootView: ratingView)
 
-        let reviewHStackView = UIStackView(arrangedSubviews: [hostingRatingView.view,reviewCountLbl])
+        let reviewHStackView = UIStackView(arrangedSubviews: [hostingRatingView.view])
         reviewHStackView.axis = .horizontal
         reviewHStackView.spacing = 4
         reviewHStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -136,7 +128,6 @@ class LinearLayoutCell : UICollectionViewCell{
         detailsVStackView.translatesAutoresizingMaskIntoConstraints = false
         
         
-        
         //Image View constraints
         productPreview.snp.makeConstraints { make in
             make.left.equalTo(self.contentView).offset(15)
@@ -157,12 +148,12 @@ class LinearLayoutCell : UICollectionViewCell{
     }
 
     
-    func config(viewModel : LinearLayoutCellViewModel){
+    func config(with viewModel : LinearLayoutCellViewModel){
         self.title.text = viewModel.name
         self.priceLbl.text = "₹\(viewModel.price)"
-        self.reviewCountLbl.text = "(\(viewModel.reviewCount))"
+//        self.reviewCountLbl.text = "(\(viewModel.reviewCount))"
         
-        self.ratingView.setRating(rating: viewModel.rating)
+        self.ratingView.setRating(rating: viewModel.rating,reviewCount: viewModel.reviewCount)
         if let _colors = viewModel.colors{
             self.colorsView.setColors(colors: _colors)
         }

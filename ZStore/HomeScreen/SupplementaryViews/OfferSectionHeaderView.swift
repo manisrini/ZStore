@@ -7,6 +7,7 @@
 
 import UIKit
 import DesignSystem
+import SDWebImage
 
 class OfferSectionHeaderView : UICollectionReusableView{
     
@@ -35,7 +36,7 @@ class OfferSectionHeaderView : UICollectionReusableView{
                 
         let label = UILabel()
         label.text = "Offers"
-        label.font = .fontStyle(size: 18, weight: 600)
+        label.font = .fontStyle(size: 18, weight: .semibold)
         label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
         
         baseView.addSubview(label)

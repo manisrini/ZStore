@@ -21,6 +21,9 @@
 		2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */; };
 		2A32C7222CA1309300E0575E /* ProductData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A32C7212CA1309000E0575E /* ProductData+CoreDataProperties.swift */; };
 		2A32C7232CA1309300E0575E /* ProductData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A32C7202CA1309000E0575E /* ProductData+CoreDataClass.swift */; };
+		2A32C7252CA13A2B00E0575E /* WaterfallLayoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A32C7242CA13A2B00E0575E /* WaterfallLayoutCell.swift */; };
+		2A32C7272CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A32C7262CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift */; };
+		2A32C7292CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A32C7282CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift */; };
 		2A44413C2C9D7C320003A9C5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44413B2C9D7C320003A9C5 /* Constants.swift */; };
 		2A44417C2C9DA2600003A9C5 /* ZChip in Frameworks */ = {isa = PBXBuildFile; productRef = 2A44417B2C9DA2600003A9C5 /* ZChip */; };
 		2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4BF4162C9BEC4C00C96C35 /* AppDelegate.swift */; };
@@ -46,7 +49,7 @@
 		2AB509A42CA04867003A3209 /* CardOfferData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5099E2CA04867003A3209 /* CardOfferData+CoreDataClass.swift */; };
 		2AB509A52CA04867003A3209 /* CardOfferData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */; };
 		2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509AA2CA04E69003A3209 /* DBQueries.swift */; };
-		2AB509B62CA0A301003A3209 /* LinearCompositionFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509B52CA0A301003A3209 /* LinearCompositionFlowLayout.swift */; };
+		2AB509B62CA0A301003A3209 /* LinearCompositionalFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,9 @@
 		2A1C10FE2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferSectionFooterView.swift; sourceTree = "<group>"; };
 		2A32C7202CA1309000E0575E /* ProductData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2A32C7212CA1309000E0575E /* ProductData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2A32C7242CA13A2B00E0575E /* WaterfallLayoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallLayoutCell.swift; sourceTree = "<group>"; };
+		2A32C7262CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallLayoutCellViewModel.swift; sourceTree = "<group>"; };
+		2A32C7282CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallCompositionalFlowLayout.swift; sourceTree = "<group>"; };
 		2A44413B2C9D7C320003A9C5 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2A44417A2C9D922B0003A9C5 /* ZChip */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ZChip; sourceTree = "<group>"; };
 		2A4BF4132C9BEC4C00C96C35 /* ZStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,7 +115,7 @@
 		2AB5099E2CA04867003A3209 /* CardOfferData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardOfferData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardOfferData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2AB509AA2CA04E69003A3209 /* DBQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBQueries.swift; sourceTree = "<group>"; };
-		2AB509B52CA0A301003A3209 /* LinearCompositionFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearCompositionFlowLayout.swift; sourceTree = "<group>"; };
+		2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearCompositionalFlowLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,13 +165,13 @@
 			path = OfferView;
 			sourceTree = "<group>";
 		};
-		2A153A842C9EE0C00009761F /* DetailView */ = {
+		2A153A842C9EE0C00009761F /* ProductListView */ = {
 			isa = PBXGroup;
 			children = (
 				2A153A862C9EE1080009761F /* Waterfall */,
 				2A153A852C9EE1030009761F /* Linear */,
 			);
-			path = DetailView;
+			path = ProductListView;
 			sourceTree = "<group>";
 		};
 		2A153A852C9EE1030009761F /* Linear */ = {
@@ -182,6 +188,8 @@
 		2A153A862C9EE1080009761F /* Waterfall */ = {
 			isa = PBXGroup;
 			children = (
+				2A32C7242CA13A2B00E0575E /* WaterfallLayoutCell.swift */,
+				2A32C7262CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift */,
 			);
 			path = Waterfall;
 			sourceTree = "<group>";
@@ -292,7 +300,7 @@
 			children = (
 				2AB509B42CA0A2E2003A3209 /* Layout */,
 				2AB5096B2CA03E0A003A3209 /* DBHelper */,
-				2A153A842C9EE0C00009761F /* DetailView */,
+				2A153A842C9EE0C00009761F /* ProductListView */,
 				2A153A7F2C9EC3C00009761F /* OfferView */,
 				2A9A28FC2C9C85F7002A08C5 /* FilterView */,
 				2A1C10F62C9DE4BF00CC59A5 /* SupplementaryViews */,
@@ -344,7 +352,8 @@
 		2AB509B42CA0A2E2003A3209 /* Layout */ = {
 			isa = PBXGroup;
 			children = (
-				2AB509B52CA0A301003A3209 /* LinearCompositionFlowLayout.swift */,
+				2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */,
+				2A32C7282CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -492,7 +501,7 @@
 				2A9A293F2C9CAD32002A08C5 /* HomeScreenResponse.swift in Sources */,
 				2A9A28FE2C9C862C002A08C5 /* FilterView.swift in Sources */,
 				2AB509A22CA04867003A3209 /* CategoryData+CoreDataClass.swift in Sources */,
-				2AB509B62CA0A301003A3209 /* LinearCompositionFlowLayout.swift in Sources */,
+				2AB509B62CA0A301003A3209 /* LinearCompositionalFlowLayout.swift in Sources */,
 				2AB509A32CA04867003A3209 /* CategoryData+CoreDataProperties.swift in Sources */,
 				2AB509A42CA04867003A3209 /* CardOfferData+CoreDataClass.swift in Sources */,
 				2AB509A52CA04867003A3209 /* CardOfferData+CoreDataProperties.swift in Sources */,
@@ -502,14 +511,17 @@
 				2A4BF4812C9BFB9F00C96C35 /* HomeScreenViewModel.swift in Sources */,
 				2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */,
 				2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */,
+				2A32C7272CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift in Sources */,
 				2A153A8A2C9F07EE0009761F /* AvailableColorsView.swift in Sources */,
 				2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */,
 				2A4BF4892C9C01C900C96C35 /* Test.swift in Sources */,
 				2A153A8C2C9F27330009761F /* LinearLayoutCellViewModel.swift in Sources */,
 				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
 				2A153A8E2C9F32520009761F /* AvailableColorsViewModel.swift in Sources */,
+				2A32C7252CA13A2B00E0575E /* WaterfallLayoutCell.swift in Sources */,
 				2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */,
 				2A153A882C9EE1260009761F /* LinearLayoutCell.swift in Sources */,
+				2A32C7292CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,
 				2A32C7232CA1309300E0575E /* ProductData+CoreDataClass.swift in Sources */,
 				2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */,

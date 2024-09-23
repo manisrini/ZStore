@@ -38,15 +38,29 @@ public struct RatingComponent: View {
                     }
                 }
             }
+            
+            //        label.font = .fontStyle(size: 13, weight: .thin)
+            //        label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
+
+            Text("(\(self.viewModel.reviewCount))")
+                .foregroundStyle(
+                    Color(
+                        uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
+                    )
+                )
+                .font(.system(size: 13,weight: .thin))
+
         }
+        
         
     }
     
-    public func setRating(rating : Double){
+    public func setRating(rating : Double,reviewCount : Int){
         self.viewModel.rating = rating
+        self.viewModel.reviewCount = reviewCount
     }
 }
 
 #Preview {
-    RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: nil, offImage: nil))
+    RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: nil, offImage: nil,reviewCount: 5))
 }

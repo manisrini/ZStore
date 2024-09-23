@@ -10,11 +10,12 @@ public enum DSMColorTokens : String{
     case Blue = "226AB4"
     case Tertiary = "747474"
     case Quaternary = "989898"
+    case LineGrey = "EFEFEF"
 }
 
 
 extension UIFont{
-    public static func fontStyle(size : CGFloat,weight : Int) -> UIFont{
-        return UIFont.systemFont(ofSize: size, weight: .semibold)
+    public static func fontStyle(size : CGFloat,weight : UIFont.Weight) -> UIFont{
+        return UIFont.systemFont(ofSize: size, weight: weight)
     }
 }

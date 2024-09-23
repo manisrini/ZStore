@@ -7,6 +7,7 @@
 
 import UIKit
 import DesignSystem
+import SDWebImage
 
 class OfferCollectionViewCell : UICollectionViewCell
 {

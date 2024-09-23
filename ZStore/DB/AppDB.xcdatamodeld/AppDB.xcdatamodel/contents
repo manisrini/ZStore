@@ -14,7 +14,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ProductData" representedClassName=".ProductData" syncable="YES">
-        <attribute name="card_offers_ids" optional="YES" attributeType="Binary"/>
+        <attribute name="card_offers_ids" optional="YES" attributeType="String"/>
         <attribute name="category_id" optional="YES" attributeType="String"/>
         <attribute name="colors" optional="YES" attributeType="Binary"/>
         <attribute name="desc" optional="YES" attributeType="String"/>

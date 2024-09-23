@@ -88,7 +88,11 @@ class HomeScreenDataManager
                     dbObj.review_count = Int32(product.review_count ?? 0)
                     dbObj.colors = product.colors?.toData()
                     dbObj.category_id = product.category_id
-                    dbObj.card_offers_ids = product.card_offer_ids?.toData()
+                    if let cardOfferIds = product.card_offer_ids {
+                        print(cardOfferIds.joined(separator: ","))
+                        dbObj.card_offers_ids = cardOfferIds.joined(separator: ",")
+                    }
+//                    dbObj.card_offers_ids = product.card_offer_ids?.toData()
                     //                    if let _categoryId = product.category_id{
                     //                        if let _category = self.fetchCategoryById(_categoryId, context: managedContext){
                     //                            dbObj.category = _category

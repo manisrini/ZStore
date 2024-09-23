@@ -20,7 +20,7 @@ class DBQueries {
 //    
     public static func filterBy(cardOfferId : String,categoryId : String) -> NSPredicate
     {
-        return NSPredicate(format: "id IN %@ AND category_id == %@", cardOfferId,categoryId)
+        return NSPredicate(format: "card_offers_ids CONTAINS %@ AND category_id == %@", cardOfferId,categoryId)
 
     }
     

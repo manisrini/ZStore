@@ -158,6 +158,7 @@ final class HomeScreenVC: UIViewController {
                 self?.cardOfferFetchedResultsController = HomeScreenDataManager.shared.setupCardOffersFetchedResultsController()
                 
                 if let categories = self?.categoryFetchedResultsController?.fetchedObjects,let firstCategory = categories.first,let id = firstCategory.id{
+                    self?.viewModel.selectedCategory = firstCategory
                     self?.productFetchedResultsController =  HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: id
                     )
                 }
@@ -183,6 +184,10 @@ final class HomeScreenVC: UIViewController {
     
     private func reloadSection(at section : Int){
         self.storeCollectionView.reloadSections(IndexSet(integer: section))
+    }
+    
+    private func updateProducts(categoryId : String,cardOfferId : String?){
+        self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
     }
 }
 
@@ -227,7 +232,7 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
                 self.viewModel.selectedOffer = selectedOffer
                 self.offerSectionFooterView?.config(value: selectedOffer.card_name)
                 let selectedCategoryId = self.viewModel.selectedCategory?.id ?? ""
-                self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: selectedCategoryId, cardOfferId: selectedOffer.id)
+                self.updateProducts(categoryId: selectedCategoryId, cardOfferId: selectedOffer.id)
                 self.reloadSection(at: 1)
             }
         }
@@ -278,7 +283,7 @@ extension HomeScreenVC : FilterViewDelegate{
     //        self.viewModel.updateProducts()
     //        self.viewModel.updateOffers()
     //        self.fetchProducts()
-            self.productFetchedResultsController = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: item.id)
+            self.updateProducts(categoryId: item.id, cardOfferId: nil)
             self.storeCollectionView.reloadData()
         }
         
@@ -288,7 +293,10 @@ extension HomeScreenVC : FilterViewDelegate{
 extension HomeScreenVC : OfferSectionFooterViewDelegate{
     func didTapButton() {
         self.viewModel.removeOffer()
-        self.reloadSection(at: 1)
+        if let selectedCategoryId = self.viewModel.selectedCategory?.id{
+            self.updateProducts(categoryId: selectedCategoryId , cardOfferId: nil)
+            self.reloadSection(at: 1)
+        }
     }
 }
 

@@ -231,7 +231,8 @@ class HomeScreenViewModel{
             rating: product.rating,
             price: Double(product.price),
             desc: product.desc ?? "",
-            isFavourite: product.isFavourite
+            isFavourite: product.isFavourite,
+            offer: _offer
         )
     }
     

@@ -17,8 +17,9 @@ class WaterfallLayoutCellViewModel
     let price : Double
     let desc : String
     let isFavourite : Bool
-    
-    init(id : String,imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String,isFavourite : Bool) {
+    let offer : OfferPrice?
+
+    init(id : String,imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String,isFavourite : Bool,offer : OfferPrice?) {
         self.id = id
         self.name = name
         self.rating = rating
@@ -27,5 +28,6 @@ class WaterfallLayoutCellViewModel
         self.desc = desc
         self.imageUrl = imageUrl
         self.isFavourite = isFavourite
+        self.offer = offer
     }
 }

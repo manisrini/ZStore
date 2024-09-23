@@ -22,7 +22,6 @@ public struct RatingComponent: View {
                 Text(Utils.formatDecimal(viewModel.rating))
                     .foregroundStyle(Color(Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
                     .font(.system(size: 13,weight: .semibold))
-                    .frame(width: 25)
                 
                 ForEach(1 ... viewModel.maxRating,id: \.self) { item in
                     if item <= Int(viewModel.rating){
@@ -45,7 +44,7 @@ public struct RatingComponent: View {
                             uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
                         )
                     )
-                    .font(.system(size: 13,weight: .regular))
+                    .font(.system(size: 12,weight: .regular))
 
             }
             

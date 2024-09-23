@@ -55,13 +55,6 @@ class WaterfallLayoutCell: UICollectionViewCell {
         return label
     }()
     
-    private let priceLabel: UILabel = {
-        let label = UILabel()
-        label.font = .fontStyle(size: 20, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
     private let descLbl : UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -80,6 +73,13 @@ class WaterfallLayoutCell: UICollectionViewCell {
         triangleView.translatesAutoresizingMaskIntoConstraints = false
         return triangleView
     }()
+    
+    private let priceDetailsView : PriceAndOfferDetailsView = {
+        let view = PriceAndOfferDetailsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     
     private let addToFavButton: UIButton = {
         let favButton = UIButton(type: .system)
@@ -119,7 +119,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         contentView.addSubview(imageContainerView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(hostingRatingView.view)
-        contentView.addSubview(priceLabel)
+        contentView.addSubview(priceDetailsView)
         contentView.addSubview(descLbl)
         contentView.addSubview(addToFavButton)
         
@@ -163,21 +163,22 @@ class WaterfallLayoutCell: UICollectionViewCell {
         }
         
         hostingRatingView.view.snp.makeConstraints { make in
-            make.left.equalTo(contentView).offset(10)
-            make.right.equalTo(contentView).offset(5)
+            make.left.equalTo(contentView).offset(5)
+            make.right.equalTo(contentView)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
         
-        priceLabel.snp.makeConstraints { make in
+        priceDetailsView.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(10)
-            make.right.equalTo(contentView).offset(5)
-            make.top.equalTo(hostingRatingView.view.snp.bottom).offset(10)
+            make.right.equalTo(contentView).offset(-5)
+            make.top.equalTo(hostingRatingView.view.snp.bottom)
+            make.height.equalTo(30)
         }
         
         descLbl.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(10)
-            make.right.equalTo(contentView).offset(5)
-            make.top.equalTo(priceLabel.snp.bottom).offset(10)
+            make.right.equalTo(contentView.snp.right).offset(-5)
+            make.top.equalTo(priceDetailsView.snp.bottom)
         }
         
         addToFavButton.snp.makeConstraints { make in
@@ -259,8 +260,10 @@ class WaterfallLayoutCell: UICollectionViewCell {
     func config(with product: WaterfallLayoutCellViewModel) {
         self.viewModel = product
         productImageView.loadImage(url: product.imageUrl)
+        
+        priceDetailsView.config(price: product.price, offerPrice: product.offer?.offerPrice, amountSaved: product.offer?.amountSaved)
+
         titleLabel.text = product.name
-        priceLabel.text = "₹\(product.price)"
         descLbl.attributedText = product.desc.renderMarkDownText()
         self.ratingView.setRating(rating: product.rating,reviewCount: product.reviewCount)
 

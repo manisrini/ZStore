@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2A00F18A2CA002550099AD9D /* String+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A00F1892CA002550099AD9D /* String+ext.swift */; };
 		2A00F18E2CA02D120099AD9D /* AppDB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2A00F18C2CA02D120099AD9D /* AppDB.xcdatamodeld */; };
+		2A024D442CA1F131009FF681 /* PriceAndOfferDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A024D432CA1F131009FF681 /* PriceAndOfferDetailsView.swift */; };
 		2A153A7E2C9E8F690009761F /* RadioButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A7D2C9E8F690009761F /* RadioButtonView.swift */; };
 		2A153A812C9EC45F0009761F /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */; };
 		2A153A832C9EC5D90009761F /* OfferCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */; };
@@ -71,6 +72,7 @@
 /* Begin PBXFileReference section */
 		2A00F1892CA002550099AD9D /* String+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ext.swift"; sourceTree = "<group>"; };
 		2A00F18D2CA02D120099AD9D /* AppDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AppDB.xcdatamodel; sourceTree = "<group>"; };
+		2A024D432CA1F131009FF681 /* PriceAndOfferDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceAndOfferDetailsView.swift; sourceTree = "<group>"; };
 		2A153A7D2C9E8F690009761F /* RadioButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonView.swift; sourceTree = "<group>"; };
 		2A153A802C9EC45F0009761F /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A153A822C9EC5D90009761F /* OfferCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCellViewModel.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 			children = (
 				2A153A862C9EE1080009761F /* Waterfall */,
 				2A153A852C9EE1030009761F /* Linear */,
+				2A024D432CA1F131009FF681 /* PriceAndOfferDetailsView.swift */,
 			);
 			path = ProductListView;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */,
 				2A32C7272CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift in Sources */,
 				2A153A8A2C9F07EE0009761F /* AvailableColorsView.swift in Sources */,
+				2A024D442CA1F131009FF681 /* PriceAndOfferDetailsView.swift in Sources */,
 				2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */,
 				2A4BF4892C9C01C900C96C35 /* Test.swift in Sources */,
 				2A153A8C2C9F27330009761F /* LinearLayoutCellViewModel.swift in Sources */,

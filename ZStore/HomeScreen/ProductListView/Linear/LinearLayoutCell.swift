@@ -24,22 +24,6 @@ class LinearLayoutCell : UICollectionViewCell{
         return label
     }()
         
-    private let currentPriceLbl : UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.font = .fontStyle(size: 20, weight: .semibold)
-        return label
-    }()
-    
-    private let oldPriceLabel : UILabel = {
-        let label = UILabel()
-        label.isHidden = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        return label
-    }()
-    
     private let descLbl : UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -67,6 +51,11 @@ class LinearLayoutCell : UICollectionViewCell{
         return view
     }()
 
+    private let priceDetailsView : PriceAndOfferDetailsView = {
+        let view = PriceAndOfferDetailsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -92,35 +81,11 @@ class LinearLayoutCell : UICollectionViewCell{
         }
         
         
-        let containerPriceView = UIView()
-        containerPriceView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(containerPriceView)
-        containerPriceView.addSubview(currentPriceLbl)
-        containerPriceView.addSubview(oldPriceLabel)
-        containerPriceView.addSubview(chipView)
-        
-        containerPriceView.snp.makeConstraints { make in
+        self.contentView.addSubview(priceDetailsView)
+        priceDetailsView.snp.makeConstraints { make in
             make.left.equalTo(contentView)
-            make.left.equalTo(contentView)
+            make.right.equalTo(contentView)
             make.height.equalTo(30)
-        }
-        
-        currentPriceLbl.snp.makeConstraints { make in
-            make.left.equalTo(self.contentView).offset(15)
-            make.top.equalTo(containerPriceView).offset(5)
-            make.centerY.equalTo(containerPriceView)
-        }
-        
-        oldPriceLabel.snp.makeConstraints { make in
-            make.left.equalTo(currentPriceLbl.snp.right).offset(5)
-            make.top.equalTo(containerPriceView).offset(5)
-            make.centerY.equalTo(containerPriceView)
-        }
-        
-        chipView.snp.makeConstraints { make in
-            make.left.equalTo(oldPriceLabel.snp.right).offset(5)
-            make.top.equalTo(containerPriceView).offset(5)
-            make.centerY.equalTo(containerPriceView)
         }
         
         self.contentView.addSubview(productPreview)
@@ -132,36 +97,8 @@ class LinearLayoutCell : UICollectionViewCell{
             make.width.equalTo(90)
             make.height.equalTo(90)
         }
-
-//        self.contentView.addSubview(title)
-//        
-//        title.snp.makeConstraints { make in
-//            make.top.equalTo(contentView)
-//            make.left.equalTo(productPreview.snp.right).offset(15)
-//            make.right.lessThanOrEqualTo(self.contentView).offset(-10)
-//            make.height.greaterThanOrEqualTo(10)
-//        }
-//        
-//        
-//        self.contentView.addSubview(reviewHStackView)
-//        
-//        reviewHStackView.snp.makeConstraints { make in
-//            make.top.equalTo(title.snp.bottom).offset(2)
-//            make.left.equalTo(productPreview.snp.right).offset(15)
-//            make.right.lessThanOrEqualTo(self.contentView).offset(-10)
-//            make.height.equalTo(20)
-//        }
-//        
-//        self.contentView.addSubview(priceHStackView)
-//        
-//        priceHStackView.snp.makeConstraints { make in
-//            make.top.equalTo(reviewHStackView.snp.bottom).offset(2)
-//            make.left.equalTo(productPreview.snp.right).offset(15)
-//            make.right.lessThanOrEqualTo(self.contentView).offset(-10)
-//            make.height.equalTo(25)
-//        }
         
-        let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,containerPriceView,descLbl,hostingColorsView.view])
+        let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,priceDetailsView,descLbl,hostingColorsView.view])
         detailsVStackView.axis = .vertical
         detailsVStackView.spacing = 2
         detailsVStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -190,19 +127,8 @@ class LinearLayoutCell : UICollectionViewCell{
     func config(with viewModel : LinearLayoutCellViewModel){
         self.title.text = viewModel.name
         
-        if let cardOffer = viewModel.offer{
-            self.currentPriceLbl.text = "₹\(cardOffer.offerPrice)"
-            self.oldPriceLabel.attributedText = String(describing: viewModel.price).renderStrikeThrough()
-            self.chipView.config(with: "\(cardOffer.amountSaved)")
-            self.oldPriceLabel.isHidden = false
-            self.chipView.isHidden = false
-            
-        }else{
-            self.chipView.isHidden = true
-            self.currentPriceLbl.text = "₹\(Utils.formatDecimal(viewModel.price))"
-            self.oldPriceLabel.isHidden = true
-        }
-        
+        priceDetailsView.config(price: viewModel.price, offerPrice: viewModel.offer?.offerPrice, amountSaved: viewModel.offer?.amountSaved)
+
         self.ratingView.setRating(rating: viewModel.rating,reviewCount: viewModel.reviewCount)
         if let _colors = viewModel.colors{
             self.colorsView.setColors(colors: _colors)

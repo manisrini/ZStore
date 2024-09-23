@@ -9,7 +9,16 @@ import UIKit
 import DesignSystem
 import SwiftUI
 
+protocol WaterfallLayoutCellDelegate : AnyObject{
+    func didTapAddToFavButton(productId  : String)
+    func didTapFavButton(productId  : String)
+}
+
+
 class WaterfallLayoutCell: UICollectionViewCell {
+    
+    weak var delegate : WaterfallLayoutCellDelegate?
+    var viewModel : WaterfallLayoutCellViewModel?
     
     private var ratingView = RatingComponent(viewModel: RatingComponentViewModel(rating: 4.5, onImage: UIImage(named: "ratingFilled"), offImage: UIImage(named: "ratingNotFilled"),reviewCount: 5))
     
@@ -21,7 +30,8 @@ class WaterfallLayoutCell: UICollectionViewCell {
     
     private let favBtn : UIButton = {
         let favButton = UIButton(type: .system)
-        favButton.setImage(UIImage(systemName: "heart.fill"), for: .normal) // SF Symbol heart icon
+        favButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        favButton.addTarget(self, action: #selector(didTapFavButton), for: .touchUpInside)
         favButton.tintColor = .white
         favButton.layer.cornerRadius = 25 // Circular shape
         favButton.translatesAutoresizingMaskIntoConstraints = false
@@ -47,8 +57,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
     
     private let priceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .systemGreen
+        label.font = .fontStyle(size: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -65,6 +74,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
     
     private let triangleView : TriangleView = {
         let triangleView = TriangleView()
+        triangleView.rotateTriangle(by: 3 * CGFloat.pi/2) //270 degrees
         triangleView.clipsToBounds = true
         triangleView.layer.cornerRadius = 20
         triangleView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,21 +83,20 @@ class WaterfallLayoutCell: UICollectionViewCell {
     
     private let addToFavButton: UIButton = {
         let favButton = UIButton(type: .system)
-        let heartImage = UIImage(systemName: "heart") // Use SF Symbol for the heart icon
+        let heartImage = UIImage(systemName: "heart")
         favButton.setImage(heartImage, for: .normal)
         favButton.setTitle(" Add to Fav", for: .normal)
-        favButton.addTarget(self, action: #selector(didTapFavButton), for: .touchUpInside)
+        favButton.addTarget(self, action: #selector(didTapAddToFavButton), for: .touchUpInside)
         
         // Adjust the image and text placement
-        favButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        favButton.tintColor = .darkGray
-        favButton.setTitleColor(.darkGray, for: .normal)
+        favButton.titleLabel?.font = .fontStyle(size: 13, weight: .semibold)
+        favButton.tintColor = Utils.hexStringToUIColor(hex: DSMColorTokens.SecondaryGrey.rawValue)
+        favButton.setTitleColor(Utils.hexStringToUIColor(hex: DSMColorTokens.SecondaryGrey.rawValue), for: .normal)
         
-        favButton.layer.borderColor = UIColor.lightGray.cgColor
+        favButton.layer.borderColor = Utils.hexStringToUIColor(hex: DSMColorTokens.SeparatorGrey.rawValue).cgColor
         favButton.layer.borderWidth = 1
         favButton.layer.cornerRadius = 10
         
-        favButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 10)
         favButton.translatesAutoresizingMaskIntoConstraints = false
         return favButton
     }()
@@ -100,11 +109,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc func didTapFavButton(){
         
-    }
-    
     private func setupViews() {
         let hostingRatingView = UIHostingController(rootView: ratingView)
 
@@ -158,7 +163,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         }
         
         hostingRatingView.view.snp.makeConstraints { make in
-            make.left.equalTo(contentView).offset(5)
+            make.left.equalTo(contentView).offset(10)
             make.right.equalTo(contentView).offset(5)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
@@ -179,45 +184,87 @@ class WaterfallLayoutCell: UICollectionViewCell {
             make.left.equalTo(contentView).offset(10)
             make.top.equalTo(descLbl.snp.bottom).offset(10)
             make.height.equalTo(36)
-            make.width.equalTo(140)
+            make.width.equalTo(110)
         }
     }
     
+    @objc func didTapAddToFavButton(){
+        if let _vm = viewModel{
+            self.updateFavoritesWithAnimations(isFavourite: true)
+            delegate?.didTapAddToFavButton(productId: _vm.id)
+        }
+    }
+    
+    @objc func didTapFavButton(){
+        if let _vm = viewModel{
+            self.updateFavoritesWithAnimations(isFavourite: false)
+            delegate?.didTapFavButton(productId: _vm.id)
+        }
+    }
+    
+    private func updateFavoritesWithAnimations(isFavourite : Bool){
+        if isFavourite{
+            
+            UIView.animate(withDuration: 0.3) {
+                self.addToFavButton.alpha = 0
+            }completion: { _ in
+                self.addToFavButton.isHidden  = true
+                self.addToFavButton.alpha = 1
+            }
+            
+            self.favBtn.isHidden = false
+            self.triangleView.isHidden = false
+            
+            self.favBtn.alpha = 0
+            self.triangleView.alpha = 0
+            UIView.animate(withDuration: 0.3) {
+                self.favBtn.alpha = 1
+                self.triangleView.alpha = 1
+            }
+
+        }else{
+            
+            UIView.animate(withDuration: 0.3) {
+                self.favBtn.alpha = 0
+                self.triangleView.alpha = 0
+            }completion: { _ in
+                self.favBtn.isHidden = true
+                self.triangleView.isHidden = true
+                self.favBtn.alpha = 1
+                self.triangleView.alpha = 1
+            }
+
+            self.addToFavButton.isHidden  = false
+            self.addToFavButton.alpha = 0
+            UIView.animate(withDuration: 0.3) {
+                self.addToFavButton.alpha = 1
+            }
+
+        }
+    }
+    
+    private func updateFavorites(isFavourite : Bool){
+        if isFavourite{
+            self.addToFavButton.isHidden  = true
+            self.favBtn.isHidden = false
+            self.triangleView.isHidden = false
+        }else{
+            self.favBtn.isHidden = true
+            self.triangleView.isHidden = true
+            self.addToFavButton.isHidden  = false
+        }
+        
+    }
+    
     func config(with product: WaterfallLayoutCellViewModel) {
+        self.viewModel = product
         productImageView.loadImage(url: product.imageUrl)
         titleLabel.text = product.name
         priceLabel.text = "₹\(product.price)"
+        descLbl.attributedText = product.desc.renderMarkDownText()
         self.ratingView.setRating(rating: product.rating,reviewCount: product.reviewCount)
 
+        self.updateFavorites(isFavourite: product.isFavourite)
     }
 }
 
-
-class TriangleView: UIView {
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .clear // Transparent background for the view itself
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        backgroundColor = .clear
-    }
-
-    override func draw(_ rect: CGRect) {
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: rect.width, y: 0))  // Top right corner
-        path.addLine(to: CGPoint(x: rect.width, y: rect.height)) // Bottom right corner
-        path.addLine(to: CGPoint(x: 0, y: rect.height)) // Bottom left corner
-        path.close() // Connect back to the start
-        
-        UIColor.systemPink.setFill()
-        path.fill()
-        self.rotateTriangle(by: 3 * CGFloat.pi/2) // rotate by 270 degrees
-    }
-    
-    func rotateTriangle(by angle: CGFloat) {
-        self.transform = CGAffineTransform(rotationAngle: angle)
-    }
-}

@@ -60,4 +60,20 @@ extension String
         }
         return attributedString
     }
+    
+    func renderStrikeThrough() -> NSAttributedString{
+        let attributedString = NSMutableAttributedString(string: self)
+        
+        attributedString.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: attributedString.length))
+        attributedString.addAttribute(.foregroundColor, value: UIColor.gray, range: NSRange(location: 0, length: attributedString.length))
+        return attributedString
+    }
+    
+    public func isEmptyOrWhitespace() -> Bool {
+        if self.isEmpty {
+            return true
+        }
+        return (self.trimmingCharacters(in: .whitespaces) == "")
+    }
+
 }

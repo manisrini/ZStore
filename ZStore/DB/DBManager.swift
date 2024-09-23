@@ -31,7 +31,7 @@ class DBManager{
         }
     }
     
-    func retreiveData(entityName : String,predicate : NSPredicate?,completionHandler : @escaping(Result<[Any],Error>) -> Void){
+    func retrieveData(entityName : String,predicate : NSPredicate?,completionHandler : @escaping(Result<[Any],Error>) -> Void){
         let managedContext = persistentContainer.viewContext
         let fetchReq = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         

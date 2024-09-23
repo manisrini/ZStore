@@ -38,9 +38,9 @@ class HomeScreenViewModel{
     var availableOffers : [CardOffer] = []
     var currentLayout : ListLayout = .Linear
     
-    func fetchData(completion : @escaping() -> Void){
+    func fetchData(_ dataManager : HomeScreenDataManager,completion : @escaping() -> Void){
         
-        if HomeScreenDataManager.shared.hasDataInDB(){            
+        if dataManager.hasDataInDB(){
             completion()
         }else{
             
@@ -52,7 +52,7 @@ class HomeScreenViewModel{
                 do{
                     let decoder = JSONDecoder()
                     let response = try decoder.decode(HomeScreenResponse.self, from: _data)
-                    self?.saveData(response: response)
+                    self?.saveData(dataManager: dataManager,response: response)
                     completion()
                 }catch {
                     print(error.localizedDescription)
@@ -62,9 +62,9 @@ class HomeScreenViewModel{
         
     }
     
-    private func saveData(response : HomeScreenResponse){ ///Save data in database
+    private func saveData(dataManager : HomeScreenDataManager,response : HomeScreenResponse){ ///Save data in database
 
-        HomeScreenDataManager.shared.saveCategories(categories: response.category ?? []) { result in
+        dataManager.saveCategories(categories: response.category ?? []) { result in
             switch result {
             case .success(_):
                 print("categories saved")
@@ -74,7 +74,7 @@ class HomeScreenViewModel{
         }
         
         
-        HomeScreenDataManager.shared.saveOffers(cardOffers: response.card_offers ?? [], completionHandler: { result in
+        dataManager.saveOffers(cardOffers: response.card_offers ?? [], completionHandler: { result in
             switch result {
             case .success(_):
                 print("offers saved")
@@ -84,7 +84,7 @@ class HomeScreenViewModel{
 
         })
         
-        HomeScreenDataManager.shared.saveProducts(products: response.products ?? []) { result in
+        dataManager.saveProducts(products: response.products ?? []) { result in
             switch result {
             case .success(_):
                 print("products saved")
@@ -98,7 +98,30 @@ class HomeScreenViewModel{
         self.selectedOffer = nil
     }
     
-    private func setSelectedCategory(_ category : CategoryData){
+    func getCategories(availableCategories : [CategoryData]) -> [Tag]{
+        var categories : [Tag] = []
+        
+        for (index,category) in availableCategories.enumerated() {
+            if index == 0{
+                categories.append(Tag(id: category.id ?? "" , text: category.name ?? "", isSelected: true))
+            }else{
+                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: false))
+            }
+        }
+        return categories
+    }
+    
+    func updateProduct(dataManager : HomeScreenDataManager,productId : String,isFavourite : Bool){
+        dataManager.updateProduct(withId: productId, isFavourite: isFavourite) { result in
+            
+        }
+    }
+    
+    func fetchSearchedProducts(dataManager : HomeScreenDataManager,searchText : String,categoryId : String,cardOfferId : String?){
+
+    }
+    
+    /*private func setSelectedCategory(_ category : CategoryData){
         self.selectedCategory = category
     }
 
@@ -163,20 +186,7 @@ class HomeScreenViewModel{
         }
         return self.availableProductsWithOffers.count
     }
-    
-    func getCategories(availableCategories : [CategoryData]) -> [Tag]{
-        var categories : [Tag] = []
-        
-        for (index,category) in availableCategories.enumerated() {
-            if index == 0{
-                categories.append(Tag(id: category.id ?? "" , text: category.name ?? "", isSelected: true))
-            }else{
-                categories.append(Tag(id: category.id ?? "", text: category.name ?? "", isSelected: false))
-            }
-        }
-        
-        return categories
-    }
+*/
     
     func createOfferCellViewModel(_ offer : CardOfferData) -> OfferCellViewModel{
         return OfferCellViewModel(
@@ -186,7 +196,20 @@ class HomeScreenViewModel{
             imageUrl: offer.image_url)
     }
     
+    func offersAvailable(for product : ProductData) -> OfferPrice?{
+        if let _cardOffer = self.selectedOffer{
+            let amountSaved = Double(product.price) / _cardOffer.percentage
+            let offerPrice = Double(product.price) - amountSaved
+            return OfferPrice(amountSaved: Int(amountSaved) + 1, offerPrice: Int(offerPrice))
+        }
+        return nil
+        
+    }
+    
+    
     func createLinearLayoutProductModel(product : ProductData) -> LinearLayoutCellViewModel{
+        
+        let _offer = self.offersAvailable(for: product)
         
         return LinearLayoutCellViewModel(
             id : product.id ?? "",
@@ -196,11 +219,14 @@ class HomeScreenViewModel{
             rating: product.rating,
             price: Double(product.price),
             desc: product.desc ?? "",
-            colors: product.colors?.toArray())
+            colors: product.colors?.toArray(),
+            offer: _offer)
     }
     
     func createWaterfallLayoutProductModel(product : ProductData) -> WaterfallLayoutCellViewModel{
         
+        let _offer = self.offersAvailable(for: product)
+
         return WaterfallLayoutCellViewModel(
             id: product.id ?? "",
             imageUrl: product.image_url ?? "",
@@ -209,7 +235,7 @@ class HomeScreenViewModel{
             rating: product.rating,
             price: Double(product.price),
             desc: product.desc ?? "",
-            isFavourite: false
+            isFavourite: product.isFavourite
         )
     }
     

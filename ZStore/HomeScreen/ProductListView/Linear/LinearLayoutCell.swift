@@ -24,11 +24,19 @@ class LinearLayoutCell : UICollectionViewCell{
         return label
     }()
         
-    private let priceLbl : UILabel = {
+    private let currentPriceLbl : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.font = .fontStyle(size: 20, weight: .semibold)
+        return label
+    }()
+    
+    private let oldPriceLabel : UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
     
@@ -45,10 +53,18 @@ class LinearLayoutCell : UICollectionViewCell{
     private let productPreview: ZImageView = {
         let imageView = ZImageView()
         imageView.layer.cornerRadius = 13
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = Utils.hexStringToUIColor(hex: DSMColorTokens.LineGrey.rawValue).cgColor
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
+    }()
+    
+    private let chipView : ZChipView = {
+       let view = ZChipView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     
@@ -75,13 +91,36 @@ class LinearLayoutCell : UICollectionViewCell{
             make.height.equalTo(20)
         }
         
-        let priceHStackView = UIStackView(arrangedSubviews: [priceLbl])
-        priceHStackView.axis = .horizontal
-        priceHStackView.spacing = 8
-        priceHStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        priceHStackView.snp.makeConstraints { make in
-            make.height.equalTo(20)
+        
+        let containerPriceView = UIView()
+        containerPriceView.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(containerPriceView)
+        containerPriceView.addSubview(currentPriceLbl)
+        containerPriceView.addSubview(oldPriceLabel)
+        containerPriceView.addSubview(chipView)
+        
+        containerPriceView.snp.makeConstraints { make in
+            make.left.equalTo(contentView)
+            make.left.equalTo(contentView)
+            make.height.equalTo(30)
+        }
+        
+        currentPriceLbl.snp.makeConstraints { make in
+            make.left.equalTo(self.contentView).offset(15)
+            make.top.equalTo(containerPriceView).offset(5)
+            make.centerY.equalTo(containerPriceView)
+        }
+        
+        oldPriceLabel.snp.makeConstraints { make in
+            make.left.equalTo(currentPriceLbl.snp.right).offset(5)
+            make.top.equalTo(containerPriceView).offset(5)
+            make.centerY.equalTo(containerPriceView)
+        }
+        
+        chipView.snp.makeConstraints { make in
+            make.left.equalTo(oldPriceLabel.snp.right).offset(5)
+            make.top.equalTo(containerPriceView).offset(5)
+            make.centerY.equalTo(containerPriceView)
         }
         
         self.contentView.addSubview(productPreview)
@@ -122,7 +161,7 @@ class LinearLayoutCell : UICollectionViewCell{
 //            make.height.equalTo(25)
 //        }
         
-        let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,priceHStackView,descLbl,hostingColorsView.view])
+        let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,containerPriceView,descLbl,hostingColorsView.view])
         detailsVStackView.axis = .vertical
         detailsVStackView.spacing = 2
         detailsVStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,8 +189,19 @@ class LinearLayoutCell : UICollectionViewCell{
     
     func config(with viewModel : LinearLayoutCellViewModel){
         self.title.text = viewModel.name
-        self.priceLbl.text = "₹\(viewModel.price)"
-//        self.reviewCountLbl.text = "(\(viewModel.reviewCount))"
+        
+        if let cardOffer = viewModel.offer{
+            self.currentPriceLbl.text = "₹\(cardOffer.offerPrice)"
+            self.oldPriceLabel.attributedText = String(describing: viewModel.price).renderStrikeThrough()
+            self.chipView.config(with: "\(cardOffer.amountSaved)")
+            self.oldPriceLabel.isHidden = false
+            self.chipView.isHidden = false
+            
+        }else{
+            self.chipView.isHidden = true
+            self.currentPriceLbl.text = "₹\(Utils.formatDecimal(viewModel.price))"
+            self.oldPriceLabel.isHidden = true
+        }
         
         self.ratingView.setRating(rating: viewModel.rating,reviewCount: viewModel.reviewCount)
         if let _colors = viewModel.colors{

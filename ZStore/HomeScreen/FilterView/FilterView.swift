@@ -14,7 +14,6 @@ protocol FilterViewDelegate : AnyObject{
 
 class FilterView: UIView {
 
-    static let nibname = "FilterView"
     var chipComponent = ZChipComponent()
     weak var delegate : FilterViewDelegate?
         

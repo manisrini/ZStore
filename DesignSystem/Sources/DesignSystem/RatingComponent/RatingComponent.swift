@@ -16,43 +16,41 @@ public struct RatingComponent: View {
     }
     
     public var body: some View {
-        HStack(spacing : 2){
-            
-            Text(Utils.formatDecimal(viewModel.rating))
-                .foregroundStyle(Color(Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
-                .font(.system(size: 13,weight: .semibold))
-                .frame(width: 25)
-            
-            ForEach(1 ... viewModel.maxRating,id: \.self) { item in
-                if item <= Int(viewModel.rating){
-                    if let _onImage = viewModel.onImage{
-                        Image(uiImage: _onImage)
-                            .resizable()
-                            .frame(width: 18, height: 18)
-                    }
-                }else{
-                    if let _offImage = viewModel.offImage{
-                        Image(uiImage: _offImage)
-                            .resizable()
-                            .frame(width: 18, height: 18)
+        HStack{
+            HStack(spacing : 2){
+                
+                Text(Utils.formatDecimal(viewModel.rating))
+                    .foregroundStyle(Color(Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
+                    .font(.system(size: 13,weight: .semibold))
+                    .frame(width: 25)
+                
+                ForEach(1 ... viewModel.maxRating,id: \.self) { item in
+                    if item <= Int(viewModel.rating){
+                        if let _onImage = viewModel.onImage{
+                            Image(uiImage: _onImage)
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                        }
+                    }else{
+                        if let _offImage = viewModel.offImage{
+                            Image(uiImage: _offImage)
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                        }
                     }
                 }
+                Text("(\(self.viewModel.reviewCount))")
+                    .foregroundStyle(
+                        Color(
+                            uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
+                        )
+                    )
+                    .font(.system(size: 13,weight: .regular))
+
             }
             
-            //        label.font = .fontStyle(size: 13, weight: .thin)
-            //        label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
-
-            Text("(\(self.viewModel.reviewCount))")
-                .foregroundStyle(
-                    Color(
-                        uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Quaternary.rawValue)
-                    )
-                )
-                .font(.system(size: 13,weight: .thin))
-
+            Spacer()
         }
-        
-        
     }
     
     public func setRating(rating : Double,reviewCount : Int){

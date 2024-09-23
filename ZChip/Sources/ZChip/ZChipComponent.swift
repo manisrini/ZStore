@@ -129,7 +129,7 @@ extension ZChipComponent : UICollectionViewDelegate,UICollectionViewDataSource,U
         
         if let _viewModel = viewModel{
             let item = _viewModel.tags[indexPath.row]
-
+            
             if let currentSelectedItem = _viewModel.tags.filter({$0.isSelected == true}).first{
                 if currentSelectedItem.id == item.id{
                     return

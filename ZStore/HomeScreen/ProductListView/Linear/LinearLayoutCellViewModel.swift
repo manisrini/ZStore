@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct OfferPrice{
+    let amountSaved : Int
+    let offerPrice : Int
+}
+
 class LinearLayoutCellViewModel
 {
     let id : String
@@ -17,8 +22,9 @@ class LinearLayoutCellViewModel
     let price : Double
     let desc : String
     let colors : [String]?
+    let offer : OfferPrice?
     
-    init(id : String,imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String, colors: [String]?) {
+    init(id : String,imageUrl : String,name: String,reviewCount : Int, rating: Double, price: Double, desc: String, colors: [String]?,offer : OfferPrice? = nil) {
         self.id = id
         self.name = name
         self.rating = rating
@@ -27,5 +33,6 @@ class LinearLayoutCellViewModel
         self.desc = desc
         self.colors = colors
         self.imageUrl = imageUrl
+        self.offer = offer
     }
 }

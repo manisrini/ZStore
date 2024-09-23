@@ -24,6 +24,8 @@ final class HomeScreenVC: UIViewController {
     var categoryFetchedResultsController: NSFetchedResultsController<CategoryData>?
     var productFetchedResultsController: NSFetchedResultsController<ProductData>?
     var cardOfferFetchedResultsController: NSFetchedResultsController<CardOfferData>?
+    var dataManager = HomeScreenDataManager()
+    var workItem : DispatchWorkItem?
 
     lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
 
@@ -63,6 +65,7 @@ final class HomeScreenVC: UIViewController {
     
     private func setUpSearchBar(){
         searchBar.placeholder = "Placeholder"
+        searchBar.delegate = self
         searchBar.showsCancelButton = true
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
@@ -166,16 +169,17 @@ final class HomeScreenVC: UIViewController {
         
     private func fetchProducts(){
         
-        self.viewModel.fetchData { [weak self] in
+        self.viewModel.fetchData(dataManager) { [weak self] in
             
             DispatchQueue.main.async {
                 
-                self?.categoryFetchedResultsController = HomeScreenDataManager.shared.setupCategoriesFetchedResultsController()
-                self?.cardOfferFetchedResultsController = HomeScreenDataManager.shared.setupCardOffersFetchedResultsController()
+                self?.categoryFetchedResultsController = self?.dataManager.setupCategoriesFetchedResultsController()
+                
+                self?.cardOfferFetchedResultsController = self?.dataManager.setupCardOffersFetchedResultsController()
                 
                 if let categories = self?.categoryFetchedResultsController?.fetchedObjects,let firstCategory = categories.first,let id = firstCategory.id{
                     self?.viewModel.selectedCategory = firstCategory
-                    self?.productFetchedResultsController =  HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: id
+                    self?.productFetchedResultsController =  self?.dataManager.setupProductFetchedResultsController(categoryId: id
                     )
                     self?.productFetchedResultsController?.delegate = self
                     
@@ -184,17 +188,11 @@ final class HomeScreenVC: UIViewController {
                 
                 self?.configStickyHeaderView()
                 
-
                 self?.storeCollectionView.reloadData()
             }
         }
     }
-    
-    
-    private func getNewProducts(){
-        self.storeCollectionView.reloadData()
-    }
-        
+            
     private func configStickyHeaderView(){
         if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
             let items = self.viewModel.getCategories(availableCategories: availableCategories)
@@ -207,8 +205,17 @@ final class HomeScreenVC: UIViewController {
         self.storeCollectionView.reloadSections(IndexSet(integer: section))
     }
     
-    private func updateProducts(categoryId : String,cardOfferId : String?){
-        self.`productFetchedResultsController` = HomeScreenDataManager.shared.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
+    private func updateProducts(categoryId : String,cardOfferId : String?,searchStr : String? = nil){
+        if let _searchStr = searchStr{
+            if _searchStr.isEmptyOrWhitespace(){
+                self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(categoryId: categoryId,cardOfferId: cardOfferId)
+            }else{
+                self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(searchStr: _searchStr, categoryId: categoryId,cardOfferId: cardOfferId)
+            }
+        }else{
+            self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
+        }
+        self.reloadSection(at: 1)
     }
 }
 
@@ -250,11 +257,13 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0{ // Offers section
             if  let selectedOffer = self.cardOfferFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                
                 self.viewModel.selectedOffer = selectedOffer
                 self.offerSectionFooterView?.config(value: selectedOffer.card_name)
+                
                 let selectedCategoryId = self.viewModel.selectedCategory?.id ?? ""
                 self.updateProducts(categoryId: selectedCategoryId, cardOfferId: selectedOffer.id)
-                self.reloadSection(at: 1)
+                
             }
         }
     }
@@ -292,6 +301,7 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
                     if let waterfallCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifiers.WaterfallLayoutCell, for: indexPath) as? WaterfallLayoutCell{
                         
                         if let product = productFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+                            waterfallCell.delegate = self
                             let productVM = self.viewModel.createWaterfallLayoutProductModel(product: product)
                             waterfallCell.config(with: productVM)
                             return waterfallCell
@@ -332,14 +342,43 @@ extension HomeScreenVC : OfferSectionFooterViewDelegate{
         self.viewModel.removeOffer()
         if let selectedCategoryId = self.viewModel.selectedCategory?.id{
             self.updateProducts(categoryId: selectedCategoryId , cardOfferId: nil)
-            self.reloadSection(at: 1)
         }
+    }
+}
+
+extension HomeScreenVC : WaterfallLayoutCellDelegate{
+    func didTapFavButton(productId: String) {
+        self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: false)
+    }
+    
+    func didTapAddToFavButton(productId: String) {
+        self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: true)
     }
 }
 
 extension HomeScreenVC : NSFetchedResultsControllerDelegate{
     
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        printContent("content changed")
+}
+
+extension HomeScreenVC : UISearchBarDelegate{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        
+        self.workItem?.cancel()
+        
+        self.workItem = DispatchWorkItem{
+            let categoryId = self.viewModel.selectedCategory?.id ?? ""
+            let cardOfferId = self.viewModel.selectedOffer?.id
+            self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId,searchStr: searchText)
+        }
+        if let _workItem = workItem{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: _workItem)
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        let categoryId = self.viewModel.selectedCategory?.id ?? ""
+        let cardOfferId = self.viewModel.selectedOffer?.id
+        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
     }
 }

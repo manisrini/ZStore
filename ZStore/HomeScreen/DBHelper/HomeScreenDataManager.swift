@@ -16,7 +16,6 @@ enum Entity : String{
 
 class HomeScreenDataManager
 {
-    static let shared = HomeScreenDataManager()
     let dbManager : DBManager = DBManager()
     
     public func saveCategories(categories : [ProductCategory],completionHandler: @escaping(Result<Bool, Error>) -> Void){
@@ -92,21 +91,6 @@ class HomeScreenDataManager
                         print(cardOfferIds.joined(separator: ","))
                         dbObj.card_offers_ids = cardOfferIds.joined(separator: ",")
                     }
-//                    dbObj.card_offers_ids = product.card_offer_ids?.toData()
-                    //                    if let _categoryId = product.category_id{
-                    //                        if let _category = self.fetchCategoryById(_categoryId, context: managedContext){
-                    //                            dbObj.category = _category
-                    //                        }
-                    //                    }
-                    
-                    //                    if let cardOfferIds = product.card_offer_ids{
-                    //                        cardOfferIds.toData()
-                    //                        if let _cardOffers = self.fetchCardOffersByIds(cardOfferIds, context: managedContext){
-                    //                            for cardOffer in _cardOffers {
-                    //                                dbObj.addToCard_offers(cardOffer)
-                    //                            }
-                    //                        }
-                    //                    }
                 }
             }
             
@@ -141,6 +125,64 @@ class HomeScreenDataManager
 //        return nil
 //    }
     
+    public func getProducts(withId productId: String, isFavourite: Bool, completionHandler: @escaping(Result<Bool, Error>) -> Void) {
+        let managedContext = dbManager.persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest<ProductData> = ProductData.fetchRequest()
+        fetchRequest.predicate = DBQueries.filterBy(productId: productId)
+        
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            
+            if let productToUpdate = results.first {
+                productToUpdate.isFavourite = isFavourite
+
+                dbManager.saveContext(managedObjectContext: managedContext) { result in
+                    switch result {
+                    case .success(_):
+                        completionHandler(.success(true))
+                    case .failure(let error):
+                        completionHandler(.failure(error))
+                    }
+                }
+            } else {
+                completionHandler(.success(false))
+            }
+            
+        } catch let error as NSError {
+            completionHandler(.failure(error))
+        }
+    }
+    
+    public func updateProduct(withId productId: String, isFavourite: Bool, completionHandler: @escaping(Result<Bool, Error>) -> Void) {
+        let managedContext = dbManager.persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest<ProductData> = ProductData.fetchRequest()
+        fetchRequest.predicate = DBQueries.filterBy(productId: productId)
+        
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            
+            if let productToUpdate = results.first {
+                productToUpdate.isFavourite = isFavourite
+
+                dbManager.saveContext(managedObjectContext: managedContext) { result in
+                    switch result {
+                    case .success(_):
+                        completionHandler(.success(true))
+                    case .failure(let error):
+                        completionHandler(.failure(error))
+                    }
+                }
+            } else {
+                completionHandler(.success(false))
+            }
+            
+        } catch let error as NSError {
+            completionHandler(.failure(error))
+        }
+    }
+    
     func setupCardOffersFetchedResultsController() -> NSFetchedResultsController<CardOfferData>{
         let fetchRequest : NSFetchRequest<CardOfferData> = CardOfferData.fetchRequest()
         let context = DBManager.shared.persistentContainer.viewContext
@@ -171,6 +213,26 @@ class HomeScreenDataManager
             print("failed to fetch cat")
         }
         return categoriesFetchedResultsController
+    }
+    
+    func setupProductFetchedResultsController(searchStr : String,categoryId : String,cardOfferId : String? = nil,search : String? = nil) -> NSFetchedResultsController<ProductData>{
+        
+        let fetchRequest : NSFetchRequest<ProductData> = ProductData.fetchRequest()
+        let context = DBManager.shared.persistentContainer.viewContext
+        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+
+        fetchRequest.predicate = DBQueries.filterBy(categoryId: categoryId, searchStr: searchStr, cardOfferId: cardOfferId)
+        
+        let productFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do{
+            try productFetchedResultsController.performFetch()
+        }catch{
+            print("failed to fetch products")
+        }
+        
+        return productFetchedResultsController
     }
 
     func setupProductFetchedResultsController(categoryId : String,cardOfferId : String? = nil) -> NSFetchedResultsController<ProductData>{

@@ -21,7 +21,7 @@ class OfferSectionFooterView : UICollectionReusableView{
     private let leftLabel : UILabel = {
         let label = UILabel()
         label.text = "Applied:"
-        label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Gray.rawValue)
+        label.textColor = Utils.hexStringToUIColor(hex: DSMColorTokens.SecondaryGrey.rawValue)
         label.font = .systemFont(ofSize: 15)
         return label
     }()

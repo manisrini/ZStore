@@ -77,7 +77,25 @@ final class HomeScreenVC: UIViewController {
         let fabContainerView = UIView()
         fabContainerView.layer.cornerRadius = 25
         
-        let fabView = UIHostingController(rootView: FabView())
+        let fabView = UIHostingController(rootView: FabView(fabItems: [
+            .init(id : "1",image: "star", text: "Rating", isSelected: true),
+            .init(id : "2",image: "dollar", text: "Price", isSelected: false)
+        ]) { [weak self] sortWith in
+            if sortWith == self?.viewModel.sortWith{
+                return
+            }
+            
+            if sortWith == .Price{
+                self?.viewModel.sortWith = .Price
+                self?.viewModel.sortDescriptor = "price"
+            }else{
+                self?.viewModel.sortWith = .Rating
+                self?.viewModel.sortDescriptor = "rating"
+            }
+            let categoryId = self?.viewModel.selectedCategory?.id ?? ""
+            let cardOfferId = self?.viewModel.selectedOffer?.id
+            self?.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
+        })
         fabView.view.layer.cornerRadius = 25
         
         fabContainerView.addSubview(fabView.view)
@@ -205,16 +223,24 @@ final class HomeScreenVC: UIViewController {
         self.storeCollectionView.reloadSections(IndexSet(integer: section))
     }
     
-    private func updateProducts(categoryId : String,cardOfferId : String?,searchStr : String? = nil){
-        if let _searchStr = searchStr{
-            if _searchStr.isEmptyOrWhitespace(){
-                self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(categoryId: categoryId,cardOfferId: cardOfferId)
-            }else{
-                self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(searchStr: _searchStr, categoryId: categoryId,cardOfferId: cardOfferId)
-            }
+    private func updateProducts(categoryId : String,cardOfferId : String?){
+        
+        
+        if self.viewModel.searchStr.isEmptyOrWhitespace(){
+            self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(
+                categoryId: categoryId,
+                cardOfferId: cardOfferId,
+                sortDescriptor: self.viewModel.sortDescriptor
+            )
         }else{
-            self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(categoryId: categoryId, cardOfferId: cardOfferId)
+            self.productFetchedResultsController = dataManager.setupProductFetchedResultsController(
+                searchStr: self.viewModel.searchStr,
+                categoryId: categoryId,
+                cardOfferId: cardOfferId,
+                sortDescriptor: self.viewModel.sortDescriptor
+            )
         }
+        
         self.reloadSection(at: 1)
     }
 }
@@ -363,13 +389,14 @@ extension HomeScreenVC : NSFetchedResultsControllerDelegate{
 extension HomeScreenVC : UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        
+        self.viewModel.searchStr = searchText
         self.workItem?.cancel()
         
         self.workItem = DispatchWorkItem{
             let categoryId = self.viewModel.selectedCategory?.id ?? ""
             let cardOfferId = self.viewModel.selectedOffer?.id
-            self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId,searchStr: searchText)
+            self.viewModel.searchStr = searchText
+            self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
         }
         if let _workItem = workItem{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: _workItem)
@@ -377,8 +404,12 @@ extension HomeScreenVC : UISearchBarDelegate{
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.viewModel.searchStr = ""
         let categoryId = self.viewModel.selectedCategory?.id ?? ""
         let cardOfferId = self.viewModel.selectedOffer?.id
-        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
+        self.updateProducts(
+            categoryId: categoryId,
+            cardOfferId: cardOfferId
+        )
     }
 }

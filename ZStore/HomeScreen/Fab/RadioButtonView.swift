@@ -21,19 +21,32 @@ public struct RadioButtonView: View {
         Button{
             self.onChange?(item)
         } label: {
+            //            HStack{
+            //                RoundedRectangle(cornerRadius : 15)
+            //                    .foregroundStyle(Color.white)
+            //                    .overlay {
+            //                        Image(item.image).resizable()
+            //                            .renderingMode(.template)
+            //                            .tint(Color(uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
+            //                            .frame(width: 20,height: 20)
+            //                    }
+            //                    .frame(width: 36,height: 36)
+            //
+            //                Text(item.text)
+            //                    .padding(.leading,5)
+            //
+            //                Spacer()
+            //
+            //                Image(item.isSelected ? "select" : "unselect").resizable()
+            //                    .frame(width: 28,height: 28)
+            //                    .padding(.trailing,15)
+            //            }
+            //            .padding(.horizontal,16)
             HStack{
-                RoundedRectangle(cornerRadius : 15)
-                    .foregroundStyle(Color.white)
-                    .overlay {
-                        Image(item.image).resizable()
-                            .renderingMode(.template)
-                            .tint(Color(uiColor: Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)))
-                            .frame(width: 20,height: 20)
-                    }
-                    .frame(width: 36,height: 36)
-                
-                Text(item.text)
-                    .padding(.leading,5)
+                Text(item.text.capitalized)
+                    .lineLimit(1)
+                    .foregroundColor(.black)
+                    .font(.system(size: 13))
                 
                 Spacer()
                 

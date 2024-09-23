@@ -8,16 +8,9 @@
 import Foundation
 import ZChip
 
-struct ProductModel{
-    let id : String
-    let name : String
-    let rating : Double?
-    let review_count : Int?
-    let price : Double
-    let category : ProductCategory?
-    let cardOffers : [CardOffer]?
-    let image_url : String?
-    let description : String?
+enum SortWith{
+    case Rating
+    case Price
 }
 
 enum ListLayout : String {
@@ -37,6 +30,9 @@ class HomeScreenViewModel{
     var availableProductsWithOffers : [Product] = []
     var availableOffers : [CardOffer] = []
     var currentLayout : ListLayout = .Linear
+    var searchStr : String = ""
+    var sortDescriptor : String = "rating"
+    var sortWith : SortWith = .Rating
     
     func fetchData(_ dataManager : HomeScreenDataManager,completion : @escaping() -> Void){
         

@@ -215,11 +215,11 @@ class HomeScreenDataManager
         return categoriesFetchedResultsController
     }
     
-    func setupProductFetchedResultsController(searchStr : String,categoryId : String,cardOfferId : String? = nil,search : String? = nil) -> NSFetchedResultsController<ProductData>{
+    func setupProductFetchedResultsController(searchStr : String,categoryId : String,cardOfferId : String? = nil,sortDescriptor : String = "rating") -> NSFetchedResultsController<ProductData>{
         
         let fetchRequest : NSFetchRequest<ProductData> = ProductData.fetchRequest()
         let context = DBManager.shared.persistentContainer.viewContext
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: sortDescriptor, ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
 
         fetchRequest.predicate = DBQueries.filterBy(categoryId: categoryId, searchStr: searchStr, cardOfferId: cardOfferId)
@@ -235,11 +235,11 @@ class HomeScreenDataManager
         return productFetchedResultsController
     }
 
-    func setupProductFetchedResultsController(categoryId : String,cardOfferId : String? = nil) -> NSFetchedResultsController<ProductData>{
+    func setupProductFetchedResultsController(categoryId : String,cardOfferId : String? = nil,sortDescriptor : String = "rating") -> NSFetchedResultsController<ProductData>{
         
         let fetchRequest : NSFetchRequest<ProductData> = ProductData.fetchRequest()
         let context = DBManager.shared.persistentContainer.viewContext
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: sortDescriptor, ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
 
         fetchRequest.predicate = DBQueries.filterBy(categoryId: categoryId)

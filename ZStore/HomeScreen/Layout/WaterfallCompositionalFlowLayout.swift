@@ -7,39 +7,77 @@
 
 import Foundation
 import UIKit
+import DesignSystem
 
 class WaterfallCompositionalFlowLayout{
     
-    static func createCompositionalLayout(showOffers : Bool = true) -> UICollectionViewCompositionalLayout{
+    static func createCompositionalLayout(items : [ProductData]) -> UICollectionViewCompositionalLayout{
         
         let section1GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
         section1GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 12)
         let section1Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),heightDimension: .absolute(120)), subitems: [section1GroupItem])
         let offersSection = NSCollectionLayoutSection(group: section1Group)
-        let section1Header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        let section1Footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
-        offersSection.boundarySupplementaryItems = [section1Header,section1Footer]
+        
+        //Header
+        let offersSectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        
+        //Footer
+        let offersSectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+        
+        offersSection.boundarySupplementaryItems = [offersSectionHeader,offersSectionFooter]
         offersSection.orthogonalScrollingBehavior = .continuous
         
-        
-        let section2GroupItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1)))
-        
-        section2GroupItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 5)
-        
-        let section2Group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(500)), subitems: [section2GroupItem,section2GroupItem])
-        let listSection = NSCollectionLayoutSection(group: section2Group)
-//        section2.interGroupSpacing = 10
 
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnv in
-            switch sectionIndex{
-            case 0:
+            if sectionIndex == 0{
                 return offersSection
-            case 1:
-                return listSection
-            default:
-                return offersSection
+            }else{
+                return WaterfallCompositionalFlowLayout.createWaterFallLayout(env: layoutEnv, items: items)
             }
         }
         return layout
     }
+    
+    static func createWaterFallLayout(env: NSCollectionLayoutEnvironment, items: [ProductData]) -> NSCollectionLayoutSection {
+        
+        let sectionHorizontalSpacing: CGFloat = 0
+        
+        let layout = WaterfallTrueCompositionalLayout.makeLayoutSection(
+            config: .init(
+                columnCount: 2,
+                interItemSpacing: 5,
+                sectionHorizontalSpacing: sectionHorizontalSpacing,
+                itemCountProvider:  {
+                    return items.count
+                },
+                itemHeightProvider: { index, itemWidth in
+                    return WaterfallCompositionalFlowLayout.calculateHeight(product: items[index],availableWidth: itemWidth,index : index)
+                }),
+            enviroment: env, sectionIndex: 1
+        )
+        return layout
+    }
+    
+    static func calculateHeight(product : ProductData,availableWidth : CGFloat,index : Int) -> CGFloat{
+        let imageContainerHeight : CGFloat = 200
+        let titleMaxHeight : CGFloat = 120
+        let titleFont : UIFont = .fontStyle(size: 18,weight: .semibold)
+        var titleHeight : CGFloat = product.name?.height(withConstrainedWidth: availableWidth, font: titleFont) ?? 0
+        
+        if titleHeight > titleMaxHeight{
+            titleHeight = titleMaxHeight
+        }
+
+        let descHeight : CGFloat = 120
+        
+        let priceDetailsView : CGFloat = 30
+        let ratingViewHeight : CGFloat = 30
+        
+        let addTofavBtnHeight : CGFloat = 36
+        let extraHeight : CGFloat = 20
+        let totalHeight : CGFloat = imageContainerHeight + titleHeight + ratingViewHeight + priceDetailsView + descHeight + addTofavBtnHeight + 30
+        
+        return totalHeight
+    }
 }
+

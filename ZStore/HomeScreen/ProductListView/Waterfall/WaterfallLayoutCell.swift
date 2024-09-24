@@ -56,7 +56,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
     
     private let descLbl : UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping
         label.font = .fontStyle(size: 13, weight: .regular)
@@ -162,7 +162,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         }
         
         hostingRatingView.view.snp.makeConstraints { make in
-            make.left.equalTo(contentView).offset(5)
+            make.left.equalTo(contentView).offset(10)
             make.right.equalTo(contentView)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
@@ -177,7 +177,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         descLbl.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(10)
             make.right.equalTo(contentView.snp.right).offset(-5)
-            make.top.equalTo(priceDetailsView.snp.bottom)
+            make.top.equalTo(priceDetailsView.snp.bottom).offset(10)
         }
         
         addToFavButton.snp.makeConstraints { make in

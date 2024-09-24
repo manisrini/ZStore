@@ -29,8 +29,6 @@ final class HomeScreenVC: UIViewController {
     
     var workItem : DispatchWorkItem?
 
-    lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
-
     
     private let storeCollectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -47,7 +45,7 @@ final class HomeScreenVC: UIViewController {
                     print("Core Data Path : Documents Directory: \(directoryLocation)Application Support")
          }
 
-        self.setNavStyles()
+        self.setNavBarStyles()
         self.setupSearchController()
         self.setupBaseView()
         self.setupFilterView()
@@ -56,10 +54,11 @@ final class HomeScreenVC: UIViewController {
         self.fetchProducts()
     }
             
-    private func setNavStyles(){
+    private func setNavBarStyles(){
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Store"
+        label.text = "Zstore"
+        label.font = .fontStyle(size: 30, weight: .bold)
         label.textAlignment = .left
         let titleItem = UIBarButtonItem(customView: label)
         self.navigationItem.leftBarButtonItem = titleItem
@@ -93,7 +92,7 @@ final class HomeScreenVC: UIViewController {
     
     @objc func didTapCancelButton(){
         self.viewModel.searchStr = ""
-        self.setNavStyles()
+        self.setNavBarStyles()
         searchController?.isActive = false
     }
     
@@ -166,7 +165,7 @@ final class HomeScreenVC: UIViewController {
 
         filterView.snp.makeConstraints { make in
             make.left.equalTo(self.baseView).offset(10)
-            make.top.equalTo(self.baseView).offset(navBarHeight + 40)
+            make.top.equalTo(self.baseView).offset(navBarHeight + 50)
             make.right.equalTo(self.baseView).offset(10)
             make.height.equalTo(100)
             self.filterViewHeightConstraint = make.height.equalTo(110).constraint
@@ -198,14 +197,14 @@ final class HomeScreenVC: UIViewController {
     }
     
     private func updateListLayout(category : CategoryData){
-        //Change the layout based on categotory
+        //Change the layout based on category
         if let listLayout = category.layout{
             if listLayout.lowercased() == ListLayout.Linear.rawValue.lowercased(){
                 self.viewModel.currentLayout = .Linear
                 self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
             }else{
                 self.viewModel.currentLayout = .WaterFall
-                self.storeCollectionView.collectionViewLayout = WaterfallCompositionalFlowLayout.createCompositionalLayout()
+                self.storeCollectionView.collectionViewLayout = WaterfallCompositionalFlowLayout.createCompositionalLayout(items: self.productFetchedResultsController?.fetchedObjects ?? [])
             }
         }
 
@@ -325,8 +324,11 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0{ // Offers section
-            if  let selectedOffer = self.cardOfferFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
+            if let selectedOffer = self.cardOfferFetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: 0)){
                 
+                if selectedOffer == self.viewModel.selectedOffer{
+                    return
+                }
                 self.viewModel.selectedOffer = selectedOffer
                 self.offerSectionFooterView?.config(value: selectedOffer.card_name)
                 
@@ -394,8 +396,15 @@ extension HomeScreenVC : FilterViewDelegate{
                 self.updateListLayout(category: newSelectedCategory)
             }
             self.updateProducts(categoryId: item.id, cardOfferId: nil)
+            self.scrollToTop()
             self.storeCollectionView.collectionViewLayout.invalidateLayout()
         }
+    }
+    
+    private func scrollToTop(){
+        let firstIndexPath = IndexPath(item: 0, section: 0)
+        self.storeCollectionView.scrollToItem(at: firstIndexPath, at: .top, animated: true)
+
     }
     
     func didChangeHeight(height: CGFloat) {
@@ -416,10 +425,16 @@ extension HomeScreenVC : OfferSectionFooterViewDelegate{
 extension HomeScreenVC : WaterfallLayoutCellDelegate{
     func didTapFavButton(productId: String) {
         self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: false)
+        let categoryId = self.viewModel.selectedCategory?.id ?? ""
+        let cardOfferId = self.viewModel.selectedOffer?.id
+        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
     }
     
     func didTapAddToFavButton(productId: String) {
         self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: true)
+        let categoryId = self.viewModel.selectedCategory?.id ?? ""
+        let cardOfferId = self.viewModel.selectedOffer?.id
+        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
     }
 }
 
@@ -430,14 +445,17 @@ extension HomeScreenVC : NSFetchedResultsControllerDelegate{
 extension HomeScreenVC : UISearchResultsUpdating{
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
-        self.workItem?.cancel()
         
-        self.workItem = DispatchWorkItem{
-            self.viewModel.searchStr = searchText
-            self.updateView()
-        }
-        if let _workItem = workItem{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: _workItem)
+        if !(self.viewModel.searchStr == searchText){
+            self.workItem?.cancel()
+            
+            self.workItem = DispatchWorkItem{
+                self.viewModel.searchStr = searchText
+                self.updateView()
+            }
+            if let _workItem = workItem{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: _workItem)
+            }
         }
     }
     

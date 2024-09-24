@@ -19,6 +19,10 @@ struct AvailableColorsView: View {
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundStyle(Color(uiColor: self.viewModel.getColor(color)))
                     .frame(width: 28,height: 28)
+                    .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
             }
             Spacer()
         }

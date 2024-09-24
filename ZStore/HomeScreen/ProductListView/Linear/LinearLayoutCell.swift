@@ -100,7 +100,7 @@ class LinearLayoutCell : UICollectionViewCell{
         
         let detailsVStackView = UIStackView(arrangedSubviews: [title,reviewHStackView,priceDetailsView,descLbl,hostingColorsView.view])
         detailsVStackView.axis = .vertical
-        detailsVStackView.spacing = 2
+        detailsVStackView.spacing = 5
         detailsVStackView.translatesAutoresizingMaskIntoConstraints = false
         
         

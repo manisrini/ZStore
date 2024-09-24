@@ -51,6 +51,9 @@
 		2AB509A52CA04867003A3209 /* CardOfferData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */; };
 		2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509AA2CA04E69003A3209 /* DBQueries.swift */; };
 		2AB509B62CA0A301003A3209 /* LinearCompositionalFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */; };
+		2AEDD3CB2CA31A450046DEF5 /* WaterfallCompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C72CA31A450046DEF5 /* WaterfallCompositionalLayout.swift */; };
+		2AEDD3CC2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C82CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift */; };
+		2AEDD3CD2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C92CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +122,9 @@
 		2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardOfferData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2AB509AA2CA04E69003A3209 /* DBQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBQueries.swift; sourceTree = "<group>"; };
 		2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearCompositionalFlowLayout.swift; sourceTree = "<group>"; };
+		2AEDD3C72CA31A450046DEF5 /* WaterfallCompositionalLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallCompositionalLayout.swift; sourceTree = "<group>"; };
+		2AEDD3C82CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WaterfallTrueCompositionalLayout+LayoutBuilder.swift"; sourceTree = "<group>"; };
+		2AEDD3C92CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallTrueCompositionalLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,8 +364,19 @@
 			children = (
 				2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */,
 				2A32C7282CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift */,
+				2AEDD3C62CA31A300046DEF5 /* WaterFallLayout */,
 			);
 			path = Layout;
+			sourceTree = "<group>";
+		};
+		2AEDD3C62CA31A300046DEF5 /* WaterFallLayout */ = {
+			isa = PBXGroup;
+			children = (
+				2AEDD3C72CA31A450046DEF5 /* WaterfallCompositionalLayout.swift */,
+				2AEDD3C92CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift */,
+				2AEDD3C82CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift */,
+			);
+			path = WaterFallLayout;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -499,6 +516,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AEDD3CC2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift in Sources */,
 				2A00F18E2CA02D120099AD9D /* AppDB.xcdatamodeld in Sources */,
 				2A9A293F2C9CAD32002A08C5 /* HomeScreenResponse.swift in Sources */,
 				2A9A28FE2C9C862C002A08C5 /* FilterView.swift in Sources */,
@@ -514,6 +532,7 @@
 				2A1C10FF2C9DEF0D00CC59A5 /* OfferSectionFooterView.swift in Sources */,
 				2A4BF41B2C9BEC4C00C96C35 /* HomeScreenVC.swift in Sources */,
 				2A32C7272CA13C6500E0575E /* WaterfallLayoutCellViewModel.swift in Sources */,
+				2AEDD3CB2CA31A450046DEF5 /* WaterfallCompositionalLayout.swift in Sources */,
 				2A153A8A2C9F07EE0009761F /* AvailableColorsView.swift in Sources */,
 				2A024D442CA1F131009FF681 /* PriceAndOfferDetailsView.swift in Sources */,
 				2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */,
@@ -523,6 +542,7 @@
 				2A153A8E2C9F32520009761F /* AvailableColorsViewModel.swift in Sources */,
 				2A32C7252CA13A2B00E0575E /* WaterfallLayoutCell.swift in Sources */,
 				2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */,
+				2AEDD3CD2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift in Sources */,
 				2A153A882C9EE1260009761F /* LinearLayoutCell.swift in Sources */,
 				2A32C7292CA13D1000E0575E /* WaterfallCompositionalFlowLayout.swift in Sources */,
 				2A4BF4172C9BEC4C00C96C35 /* AppDelegate.swift in Sources */,

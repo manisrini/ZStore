@@ -38,8 +38,10 @@ class OfferSectionFooterView : UICollectionReusableView{
         let btnImage = UIImage(named: "close")
         button.setImage(btnImage, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
+        button.imageEdgeInsets = UIEdgeInsets(top: 5, left: 0,bottom: 5, right: 5)
         return button
     }()
     
@@ -73,7 +75,7 @@ class OfferSectionFooterView : UICollectionReusableView{
         
         let stackView = UIStackView(arrangedSubviews: [leftLblContainerView,valueLabel,closeButton])
         stackView.axis = .horizontal
-        stackView.spacing = 8
+        stackView.spacing = 5
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.layer.cornerRadius = 10
         stackView.layer.borderColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Blue.rawValue).cgColor

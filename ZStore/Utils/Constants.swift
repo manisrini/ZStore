@@ -13,6 +13,8 @@ class CellIdentifiers{
     static let OfferCell = "OfferCollectionViewCell"
     static let LinearLayoutCell = "LinearLayoutCell"
     static let WaterfallLayoutCell = "WaterfallLayoutCell"
+    static let OfferSectionFooterView = "OfferSectionFooterView"
+    static let OfferSectionHeaderView = "OfferSectionHeaderView"
 }
 
     

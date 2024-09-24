@@ -18,6 +18,7 @@ public struct Tag{
 public class ZChipComponentViewModel
 {
     var tags : [Tag] = []
+    var prevTagSelectedIndex : Int = 0
 
     public init(tags: [Tag] = []) {
         self.tags = tags

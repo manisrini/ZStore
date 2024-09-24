@@ -58,7 +58,6 @@ public class ZChipComponent : UIView
     public override  func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "contentSize" {
             if let newSize = change?[.newKey] as? CGSize {
-                print("CollectionView Size -> \(newSize)")
                 self.delegate?.didChangeHeight(size: newSize)
             }
         }
@@ -87,7 +86,7 @@ public class ZChipComponent : UIView
         self.tagCollectionView.reloadData()
     }
     
-    public func updateTag(tag : Tag){
+    public func updateTag(tag : Tag){ //Selection update
         if let _viewModel = viewModel{
             var updatedTags : [Tag] = []
             var currentTagIndex = 0
@@ -102,8 +101,14 @@ public class ZChipComponent : UIView
             }
             
             self.viewModel?.tags = updatedTags
-            self.tagCollectionView.reloadItems(at: [IndexPath(item: currentTagIndex, section: 0)])
+            self.tagCollectionView.reloadItems(
+                at: [getIndexPath(item: currentTagIndex, section: 0)]
+            )
         }
+    }
+    
+    private func getIndexPath(item : Int,section : Int) -> IndexPath{
+        return IndexPath(item: item, section: section)
     }
         
 }
@@ -135,11 +140,7 @@ extension ZChipComponent : UICollectionViewDelegate,UICollectionViewDataSource,U
         }
         return CGSize()
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
+        
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -154,10 +155,15 @@ extension ZChipComponent : UICollectionViewDelegate,UICollectionViewDataSource,U
                     return
                 }
             }
+            self.viewModel?.updateTags(indexPath.row)
+            
             self.delegate?.didSelectNewItem(item: item)
+            
+            self.tagCollectionView.reloadItems(at: [getIndexPath(item: _viewModel.prevTagSelectedIndex, section: 0)])
+            self.tagCollectionView.reloadItems(at: [getIndexPath(item: indexPath.row, section: 0)])
+            
+            self.viewModel?.prevTagSelectedIndex = indexPath.row
         }
         
-        self.viewModel?.updateTags(indexPath.row)
-        self.tagCollectionView.reloadData()
     }
 }

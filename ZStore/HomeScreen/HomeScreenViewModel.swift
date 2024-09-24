@@ -8,6 +8,7 @@
 import Foundation
 import ZChip
 import CoreData
+import NetworkManager
 
 enum SortWith{
     case Rating
@@ -21,15 +22,8 @@ enum ListLayout : String {
 
 class HomeScreenViewModel{
     
-    var allProducts : [Product] = []
-    var availableCategories : [ProductCategory] = []
-    var allOffers : [CardOffer] = []
-    
     var selectedOffer : CardOfferData?
     var selectedCategory : CategoryData?
-    var availableProducts : [Product] = []
-    var availableProductsWithOffers : [Product] = []
-    var availableOffers : [CardOffer] = []
     var currentLayout : ListLayout = .Linear
     var searchStr : String = ""
     var sortDescriptor : String = "rating"
@@ -114,84 +108,7 @@ class HomeScreenViewModel{
         }
     }
     
-    func fetchSearchedProducts(dataManager : HomeScreenDataManager,searchText : String,categoryId : String,cardOfferId : String?){
-
-    }
     
-    /*private func setSelectedCategory(_ category : CategoryData){
-        self.selectedCategory = category
-    }
-
-    
-    func updateProducts(){
-        if let _selectedCategoryId = self.selectedCategory?.id{
-            self.availableProducts = allProducts.filter { product in
-                product.category_id ?? "" == _selectedCategoryId
-            }
-        }
-        
-        self.updateProductsWithOffers()
-    }
-    
-    
-    func updateProductsWithOffers(){
-        if let _selectedOffer = self.selectedOffer{
-            let filteredProducts = self.availableProducts.filter { product in
-                let cardOfferIds = product.card_offer_ids ?? []
-                return cardOfferIds.contains(_selectedOffer.id ?? "")
-            }
-            self.availableProductsWithOffers = filteredProducts
-        }
-        
-    }
-    
-    func updateOffers(){
-        var tempOffers : [CardOffer] = []
-        
-        if let _selectedCategoryId = self.selectedCategory?.id{
-            for product in availableProducts {
-                let productOfferIds = product.card_offer_ids ?? []
-                
-                for offerId in productOfferIds{
-                    if !tempOffers.contains(where: { cardOffer in
-                        cardOffer.id == offerId
-                    }){
-                        if let _offer = self.getOffer(id: offerId){
-                            tempOffers.append(_offer)
-                        }
-//
-//                        if selectedCategoryOffers.count == allOffers.count{
-//                            break
-//                        }
-                    }
-                }
-            }
-        }
-        
-        self.availableOffers = tempOffers
-    }
-    
-    func getOffer(id : String) -> CardOffer?{
-        return self.allOffers.filter { offer in
-            offer.id == id
-        }.first
-    }
-    
-    func getProductCount() -> Int{
-        if selectedOffer == nil{
-            return self.availableProducts.count
-        }
-        return self.availableProductsWithOffers.count
-    }
-*/
-    
-    func createOfferCellViewModel(_ offer : CardOfferData) -> OfferCellViewModel{
-        return OfferCellViewModel(
-            titleText: offer.card_name ?? "",
-            subtitleText: offer.offer_desc ?? "",
-            cashbackText: offer.max_discount ?? "",
-            imageUrl: offer.image_url)
-    }
     
     func offersAvailable(for product : ProductData) -> OfferPrice?{
         if let _cardOffer = self.selectedOffer{
@@ -203,6 +120,29 @@ class HomeScreenViewModel{
         
     }
     
+    func getSearchTag(fetchController : NSFetchedResultsController<ProductData>?) -> Tag{ //Show the count while searching
+        let selectedCategoryName = self.selectedCategory?.name ?? ""
+        let selectedCategoryId = self.selectedCategory?.id ?? ""
+        
+        if self.searchStr.isEmptyOrWhitespace(){
+            return Tag(id: selectedCategoryId, text: selectedCategoryName.capitalized)
+        }else{
+            let productCount = fetchController?.fetchedObjects?.count ?? 0
+            return Tag(id: selectedCategoryId, text: "\(selectedCategoryName.capitalized) (\(productCount))")
+        }
+    }
+
+    
+    //MARK: Create ViewModels
+    
+    func createOfferCellViewModel(_ offer : CardOfferData) -> OfferCellViewModel{
+        return OfferCellViewModel(
+            titleText: offer.card_name ?? "",
+            subtitleText: offer.offer_desc ?? "",
+            cashbackText: offer.max_discount ?? "",
+            imageUrl: offer.image_url)
+    }
+
     
     func createLinearLayoutProductModel(product : ProductData) -> LinearLayoutCellViewModel{
         
@@ -236,78 +176,4 @@ class HomeScreenViewModel{
             offer: _offer
         )
     }
-    
-    func getOffersCount(cardOffersFetchController : NSFetchedResultsController<CardOfferData>?) -> Int{
-        if self.searchStr.isEmptyOrWhitespace(){
-            return cardOffersFetchController?.sections?.first?.numberOfObjects ?? 0
-        }else{
-            return 0
-        }
-    }
-    
-    func showOfferSupplementaryViews() -> Bool{
-        if self.searchStr.isEmptyOrWhitespace(){
-            return true
-        }
-        return false
-    }
-    
-    func getSearchTag(fetchController : NSFetchedResultsController<ProductData>?) -> Tag{ //Show the count while searching
-        let selectedCategoryName = self.selectedCategory?.name ?? ""
-        let selectedCategoryId = self.selectedCategory?.id ?? ""
-        
-        if self.searchStr.isEmptyOrWhitespace(){
-            return Tag(id: selectedCategoryId, text: selectedCategoryName.capitalized)
-        }else{
-            let productCount = fetchController?.fetchedObjects?.count ?? 0
-            return Tag(id: selectedCategoryId, text: "\(selectedCategoryName.capitalized) (\(productCount))")
-        }
-    }
-    
-    
 }
-
-
-/*var formattedProducts : [ProductModel] = []
-
-if let _products = response.products{
-    for product in _products {
-        let category = self.getCategory(product: product, allCategories: response.category ?? [])
-        let cardOffers = self.getCardOffers(product: product, allCardOffers: response.card_offers ?? [])
-        let formattedProduct = ProductModel(
-            id: product.id ?? "",
-            name: product.name ?? "",
-            rating: product.rating,
-            review_count: product.review_count,
-            price: product.price ?? 0.0,
-            category: category,
-            cardOffers: cardOffers,
-            image_url: product.image_url,
-            description: product.description)
-        formattedProducts.append(formattedProduct)
-    }
-}
-
- private func getCategory(product : Product,allCategories : [ProductCategory]) -> ProductCategory?{
-if let _categoryId = product.category_id{
-    let filteredCategory = allCategories.filter { category in
-        category.id ?? "" == _categoryId
-    }.first
-    return filteredCategory
-}
-return nil
-}
-
-private func getCardOffers(product : Product,allCardOffers : [CardOffer]) -> [CardOffer]?{
-let currentProductCardOffersIds = product.card_offer_ids ?? []
-var currentProductOffers : [CardOffer] = []
-
-for offer in allCardOffers {
-    if let _offerId = offer.id{
-        if currentProductCardOffersIds.contains(_offerId){
-            currentProductOffers.append(offer)
-        }
-    }
-}
-return currentProductOffers
-}*/

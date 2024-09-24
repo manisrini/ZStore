@@ -10,7 +10,7 @@ import UIKit
 public final class WaterfallTrueCompositionalLayout {
     public static func makeLayoutSection(
         config: Configuration,
-        enviroment: NSCollectionLayoutEnvironment,
+        environment: NSCollectionLayoutEnvironment,
         sectionIndex: Int
     ) -> NSCollectionLayoutSection {
         
@@ -20,7 +20,7 @@ public final class WaterfallTrueCompositionalLayout {
         
         let itemProvider = LayoutBuilder(
             configuration: config,
-            collectionWidth: enviroment.container.contentSize.width
+            collectionWidth: environment.container.contentSize.width
         )
         
         for i in 0..<config.itemCountProvider() {

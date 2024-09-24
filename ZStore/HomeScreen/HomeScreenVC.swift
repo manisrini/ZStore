@@ -41,10 +41,6 @@ final class HomeScreenVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let directoryLocation = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).last {
-                    print("Core Data Path : Documents Directory: \(directoryLocation)Application Support")
-         }
-
         self.setNavBarStyles()
         self.setupSearchController()
         self.setupBaseView()
@@ -54,6 +50,29 @@ final class HomeScreenVC: UIViewController {
         self.fetchProducts()
     }
             
+    
+    private func setupSearchController() {
+        searchController = HomeScreenHelper.setUpSearchController()
+        searchController?.searchResultsUpdater = self
+    }
+
+    @objc func didTapSearchIcon(){
+        self.navigationItem.titleView = searchController?.searchBar ?? UIView()
+        self.navigationItem.leftBarButtonItem = nil
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(didTapCancelButton))
+        cancelButton.tintColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
+        self.navigationItem.rightBarButtonItem = cancelButton
+        searchController?.isActive = true
+
+    }
+    
+    @objc func didTapCancelButton(){
+        self.viewModel.searchStr = ""
+        self.updateView()
+        self.setNavBarStyles()
+        searchController?.isActive = false
+    }
+    
     private func setNavBarStyles(){
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -74,28 +93,6 @@ final class HomeScreenVC: UIViewController {
         self.navigationItem.titleView = nil
         
     }
-    
-    private func setupSearchController() {
-        searchController = HomeScreenHelper.setUpSearchController()
-        searchController?.searchResultsUpdater = self
-    }
-
-    @objc func didTapSearchIcon(){
-        self.navigationItem.titleView = searchController?.searchBar ?? UIView()
-        self.navigationItem.leftBarButtonItem = nil
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(didTapCancelButton))
-        cancelButton.tintColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
-        self.navigationItem.rightBarButtonItem = cancelButton
-        searchController?.isActive = true
-
-    }
-    
-    @objc func didTapCancelButton(){
-        self.viewModel.searchStr = ""
-        self.setNavBarStyles()
-        searchController?.isActive = false
-    }
-    
 
     private func loadFabBtn(){
         
@@ -142,10 +139,6 @@ final class HomeScreenVC: UIViewController {
          }
     }
     
-    @objc func didTapFabBtn(){
-        
-    }
-
     private func setupBaseView(){
         baseView.backgroundColor = .white
         self.view.addSubview(baseView)
@@ -172,33 +165,10 @@ final class HomeScreenVC: UIViewController {
         }
     }
     
-    private func setupCollectionView(){
-        self.storeCollectionView.dataSource = self
-        self.storeCollectionView.delegate = self
-        self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
-        
-        self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
-        self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
-        
-        self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifiers.OfferCell)
-        self.storeCollectionView.register(LinearLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.LinearLayoutCell)
-        self.storeCollectionView.register(WaterfallLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.WaterfallLayoutCell)
-        self.storeCollectionView.register(OfferSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "OfferSectionHeaderView")
-        self.storeCollectionView.register(OfferSectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "OfferSectionFooterView")
-        
-        self.baseView.addSubview(storeCollectionView)
-        
-        self.storeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(self.baseView)
-            make.right.equalTo(self.baseView)
-            make.top.equalTo(self.filterView.snp.bottom)
-            make.bottom.equalTo(self.baseView)
-        }
-    }
     
-    private func updateListLayout(category : CategoryData){
+    private func updateListLayout(layout : String?){
         //Change the layout based on category
-        if let listLayout = category.layout{
+        if let listLayout = layout{
             if listLayout.lowercased() == ListLayout.Linear.rawValue.lowercased(){
                 self.viewModel.currentLayout = .Linear
                 self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
@@ -226,7 +196,7 @@ final class HomeScreenVC: UIViewController {
                     )
                     self?.productFetchedResultsController?.delegate = self
                     
-                    self?.updateListLayout(category: firstCategory)
+                    self?.updateListLayout(layout: firstCategory.layout)
                 }
                 
                 self?.configStickyHeaderView()
@@ -272,45 +242,48 @@ final class HomeScreenVC: UIViewController {
     
 }
 
+extension HomeScreenVC{
+    private func setupCollectionView(){
+        self.storeCollectionView.dataSource = self
+        self.storeCollectionView.delegate = self
+        self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
+        
+        self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
+        self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
+        
+        self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifiers.OfferCell)
+        self.storeCollectionView.register(LinearLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.LinearLayoutCell)
+        self.storeCollectionView.register(WaterfallLayoutCell.self, forCellWithReuseIdentifier: CellIdentifiers.WaterfallLayoutCell)
+        self.storeCollectionView.register(OfferSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CellIdentifiers.OfferSectionHeaderView)
+        self.storeCollectionView.register(OfferSectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: CellIdentifiers.OfferSectionFooterView)
+        
+        self.baseView.addSubview(storeCollectionView)
+        
+        self.storeCollectionView.snp.makeConstraints { make in
+            make.left.equalTo(self.baseView)
+            make.right.equalTo(self.baseView)
+            make.top.equalTo(self.filterView.snp.bottom)
+            make.bottom.equalTo(self.baseView)
+        }
+    }
+}
+
 extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if section == 0{
-            if self.viewModel.searchStr.isEmptyOrWhitespace(){
-                return CGSize(width: collectionView.frame.width, height: 80)
-            }else{
-                return .zero
-            }
-        }
-        return .zero
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section == 0{
-            if self.viewModel.searchStr.isEmptyOrWhitespace(){
-                return CGSize(width: collectionView.frame.width, height: 80)
-            }else{
-                return .zero
-            }
-        }
-        return .zero
-    }
-    
+        
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if indexPath.section == 0 { // offer section header
             if kind == UICollectionView.elementKindSectionHeader{
-                if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionHeaderView", for: indexPath) as? OfferSectionHeaderView{
-                    headerView.isHidden = self.viewModel.showOfferSupplementaryViews() ? false : true
+                if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellIdentifiers.OfferSectionHeaderView, for: indexPath) as? OfferSectionHeaderView{
                     return headerView
                 }
             }
             
             else if kind == UICollectionView.elementKindSectionFooter{ //offer section footer
-                if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "OfferSectionFooterView", for: indexPath) as? OfferSectionFooterView{
+                if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellIdentifiers.OfferSectionFooterView, for: indexPath) as? OfferSectionFooterView{
                     self.offerSectionFooterView = footerView
                     footerView.config(value: self.viewModel.selectedOffer?.card_name)
                     footerView.delegate = self
@@ -341,7 +314,7 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return self.viewModel.getOffersCount(cardOffersFetchController: cardOfferFetchedResultsController)
+            return cardOfferFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
         } else {
             return productFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
         }
@@ -393,7 +366,7 @@ extension HomeScreenVC : FilterViewDelegate{
         if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
             if let newSelectedCategory = availableCategories.filter({$0.id ?? "" == item.id}).first{
                 self.viewModel.selectedCategory = newSelectedCategory
-                self.updateListLayout(category: newSelectedCategory)
+                self.updateListLayout(layout: newSelectedCategory.layout)
             }
             self.updateProducts(categoryId: item.id, cardOfferId: nil)
             self.scrollToTop()
@@ -427,14 +400,14 @@ extension HomeScreenVC : WaterfallLayoutCellDelegate{
         self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: false)
         let categoryId = self.viewModel.selectedCategory?.id ?? ""
         let cardOfferId = self.viewModel.selectedOffer?.id
-        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
+        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId,reloadList: false)
     }
     
     func didTapAddToFavButton(productId: String) {
         self.viewModel.updateProduct(dataManager: dataManager, productId: productId, isFavourite: true)
         let categoryId = self.viewModel.selectedCategory?.id ?? ""
         let cardOfferId = self.viewModel.selectedOffer?.id
-        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId)
+        self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId,reloadList: false)
     }
 }
 
@@ -459,7 +432,7 @@ extension HomeScreenVC : UISearchResultsUpdating{
         }
     }
     
-    private func updateView(){
+    private func updateView(){ //update category view to show count , refresh the list
         let categoryId = self.viewModel.selectedCategory?.id ?? ""
         let cardOfferId = self.viewModel.selectedOffer?.id
         self.updateProducts(categoryId: categoryId, cardOfferId: cardOfferId,reloadList: false)

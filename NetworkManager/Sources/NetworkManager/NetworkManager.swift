@@ -1,17 +1,13 @@
-//
-//  NetworkManager.swift
-//  ZStore
-//
-//  Created by Manikandan on 20/09/24.
-//
+// The Swift Programming Language
+// https://docs.swift.org/swift-book
 
 import Foundation
 
-class NetworkManager{
+public class NetworkManager{
     
-    static let shared = NetworkManager()
+    public static let shared = NetworkManager()
     
-    func getData(urlStr : String,completion : @escaping(Data?,String?) -> Void){
+    public func getData(urlStr : String,completion : @escaping(Data?,String?) -> Void){
         if let url = URL(string: urlStr){
             let request = URLRequest(url: url)
             URLSession.shared.dataTask(with: request) { data, response, error in

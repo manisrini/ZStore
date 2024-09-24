@@ -69,7 +69,6 @@ class HomeScreenDataManager
         }
     }
     
-    
     public func saveProducts(products : [Product],completionHandler: @escaping(Result<Bool, Error>) -> Void){
         let managedContext = dbManager.persistentContainer.viewContext
         
@@ -104,55 +103,8 @@ class HomeScreenDataManager
             }
         }
     }
-        
-//    func setupFetchedResultsController<T : NSManagedObject>(for entity : T.Type, sortKey : String) ->  NSFetchedResultsController<T>? where T: NSFetchRequestResult {
-//
-//        if let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as? NSFetchRequest<T>{
-//            let context = DBManager.shared.persistentContainer.viewContext
-//            let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: true)
-//            fetchRequest.sortDescriptors = [sortDescriptor]
-//            let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-//            
-//            do {
-//                try fetchedResultsController.performFetch()
-//            }catch{
-//                print("Failed to fetch \(T.self): \(error)")
-//            }
-//            
-//            return fetchedResultsController
-//        }
-//        
-//        return nil
-//    }
     
-    public func getProducts(withId productId: String, isFavourite: Bool, completionHandler: @escaping(Result<Bool, Error>) -> Void) {
-        let managedContext = dbManager.persistentContainer.viewContext
-        
-        let fetchRequest: NSFetchRequest<ProductData> = ProductData.fetchRequest()
-        fetchRequest.predicate = DBQueries.filterBy(productId: productId)
-        
-        do {
-            let results = try managedContext.fetch(fetchRequest)
-            
-            if let productToUpdate = results.first {
-                productToUpdate.isFavourite = isFavourite
-
-                dbManager.saveContext(managedObjectContext: managedContext) { result in
-                    switch result {
-                    case .success(_):
-                        completionHandler(.success(true))
-                    case .failure(let error):
-                        completionHandler(.failure(error))
-                    }
-                }
-            } else {
-                completionHandler(.success(false))
-            }
-            
-        } catch let error as NSError {
-            completionHandler(.failure(error))
-        }
-    }
+    //MARK: Update favourite for products
     
     public func updateProduct(withId productId: String, isFavourite: Bool, completionHandler: @escaping(Result<Bool, Error>) -> Void) {
         let managedContext = dbManager.persistentContainer.viewContext
@@ -215,6 +167,7 @@ class HomeScreenDataManager
         return categoriesFetchedResultsController
     }
     
+    //MARK: Update product data source for search results
     func setupProductFetchedResultsController(searchStr : String,categoryId : String,cardOfferId : String? = nil,sortDescriptor : String = "rating") -> NSFetchedResultsController<ProductData>{
         
         let fetchRequest : NSFetchRequest<ProductData> = ProductData.fetchRequest()
@@ -274,122 +227,4 @@ class HomeScreenDataManager
             return false
         }
     }
-    
-    /*func fetchCategories(completionHandler : @escaping(Result<[ProductCategory],Error>) -> Void) {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: Entity.Category.rawValue)
-        let managedContext = dbManager.persistentContainer.viewContext
-        
-        do {
-            // Perform the fetch
-            let result = try managedContext.fetch(request)
-            if let _categories = result as? [CategoryData]{
-                var categoryModelArray : [ProductCategory] = []
-                
-                for category in _categories{
-                    let categoryModel = ProductCategory(
-                        id: category.id ?? "",
-                        name: category.name,
-                        layout: category.layout
-                    )
-                    categoryModelArray.append(categoryModel)
-                }
-                completionHandler(.success(categoryModelArray))
-            }else{
-                completionHandler(.success([]))
-            }
-        } catch {
-            completionHandler(.failure(error))
-            print("Failed to fetch categories: \(error)")
-        }
-    }
-    
-    func fetchCardOffers(completionHandler : @escaping(Result<[CardOffer],Error>) -> Void) {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: Entity.CardOffer.rawValue)
-        let managedContext = dbManager.persistentContainer.viewContext
-        
-        do {
-            // Perform the fetch
-            let result = try managedContext.fetch(request)
-            if let _cardOffers = result as? [CardOffer]{
-                var cardOfferModelArray : [CardOffer] = []
-                
-                for offer in _cardOffers{
-                    let cardOfferModel = CardOffer(
-                        id: offer.id,
-                        percentage: offer.percentage,
-                        offer_desc: offer.offer_desc,
-                        card_name: offer.card_name,
-                        max_discount: offer.max_discount,
-                        image_url: offer.image_url
-                    )
-                    cardOfferModelArray.append(cardOfferModel)
-                }
-                completionHandler(.success(cardOfferModelArray))
-            }else{
-                completionHandler(.success([]))
-            }
-        } catch {
-            completionHandler(.failure(error))
-            print("Failed to fetch offers: \(error)")
-        }
-    }
-    
-    func fetchProducts(completionHandler : @escaping(Result<[Product],Error>) -> Void) {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: Entity.Product.rawValue)
-        let managedContext = dbManager.persistentContainer.viewContext
-        
-        do {
-            // Perform the fetch
-            let result = try managedContext.fetch(request)
-            if let _products = result as? [ProductData]{
-                var productModelArray : [Product] = []
-                
-                for product in _products{
-                    let productModel = Product(
-                        id: product.id ?? "",
-                        name: product.name ?? "",
-                        rating: product.rating,
-                        review_count: Int(product.review_count),
-                        price: Double(product.price),
-                        category_id: product.category_id ?? "",
-                        card_offer_ids: product.card_offers_ids?.toArray(),
-                        image_url: product.image_url,
-                        description: product.desc,
-                        colors: product.colors?.toArray())
-                    productModelArray.append(productModel)
-                }
-                completionHandler(.success(productModelArray))
-            }else{
-                completionHandler(.success([]))
-            }
-        } catch {
-            completionHandler(.failure(error))
-            print("Failed to fetch products: \(error)")
-        }
-    }*/
 }
-
-extension Data{
-    func toArray() -> [String]{
-        do {
-            let stringArray = try JSONDecoder().decode([String].self, from: self)
-            return stringArray
-        } catch {
-            print("Failed to decode JSON: \(error)")
-        }
-        return []
-    }
-}
-
-extension Array {
-    public func toData() -> Data? {
-         do {
-             let jsonData = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
-             return jsonData
-         } catch {
-             print(error.localizedDescription)
-         }
-         return nil
-     }
-}
-

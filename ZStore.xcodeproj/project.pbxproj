@@ -41,7 +41,6 @@
 		2A57786C2CA2F08A0000C427 /* HomeScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A57786B2CA2F08A0000C427 /* HomeScreenHelper.swift */; };
 		2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8F9A542C9E87A30091DC5D /* FabView.swift */; };
 		2A9A28FE2C9C862C002A08C5 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A28FD2C9C862C002A08C5 /* FilterView.swift */; };
-		2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */; };
 		2A9A293F2C9CAD32002A08C5 /* HomeScreenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A293E2C9CAD32002A08C5 /* HomeScreenResponse.swift */; };
 		2AB5096A2CA03AE5003A3209 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509692CA03AE5003A3209 /* DBManager.swift */; };
 		2AB5096D2CA041E1003A3209 /* HomeScreenDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5096C2CA041E1003A3209 /* HomeScreenDataManager.swift */; };
@@ -51,6 +50,8 @@
 		2AB509A52CA04867003A3209 /* CardOfferData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */; };
 		2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509AA2CA04E69003A3209 /* DBQueries.swift */; };
 		2AB509B62CA0A301003A3209 /* LinearCompositionalFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */; };
+		2AC34A142CA33F7C002EE1CB /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC34A132CA33F7C002EE1CB /* Array+ext.swift */; };
+		2AC34A182CA340B5002EE1CB /* NetworkManager in Frameworks */ = {isa = PBXBuildFile; productRef = 2AC34A172CA340B5002EE1CB /* NetworkManager */; };
 		2AEDD3CB2CA31A450046DEF5 /* WaterfallCompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C72CA31A450046DEF5 /* WaterfallCompositionalLayout.swift */; };
 		2AEDD3CC2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C82CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift */; };
 		2AEDD3CD2CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD3C92CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift */; };
@@ -112,7 +113,6 @@
 		2A57786B2CA2F08A0000C427 /* HomeScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenHelper.swift; sourceTree = "<group>"; };
 		2A8F9A542C9E87A30091DC5D /* FabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FabView.swift; sourceTree = "<group>"; };
 		2A9A28FD2C9C862C002A08C5 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
-		2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		2A9A293E2C9CAD32002A08C5 /* HomeScreenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenResponse.swift; sourceTree = "<group>"; };
 		2AB509692CA03AE5003A3209 /* DBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 		2AB5096C2CA041E1003A3209 /* HomeScreenDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenDataManager.swift; sourceTree = "<group>"; };
@@ -122,6 +122,8 @@
 		2AB5099F2CA04867003A3209 /* CardOfferData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardOfferData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2AB509AA2CA04E69003A3209 /* DBQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBQueries.swift; sourceTree = "<group>"; };
 		2AB509B52CA0A301003A3209 /* LinearCompositionalFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearCompositionalFlowLayout.swift; sourceTree = "<group>"; };
+		2AC34A132CA33F7C002EE1CB /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
+		2AC34A162CA34074002EE1CB /* NetworkManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkManager; sourceTree = "<group>"; };
 		2AEDD3C72CA31A450046DEF5 /* WaterfallCompositionalLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallCompositionalLayout.swift; sourceTree = "<group>"; };
 		2AEDD3C82CA31A450046DEF5 /* WaterfallTrueCompositionalLayout+LayoutBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WaterfallTrueCompositionalLayout+LayoutBuilder.swift"; sourceTree = "<group>"; };
 		2AEDD3C92CA31A450046DEF5 /* WaterfallTrueCompositionalLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterfallTrueCompositionalLayout.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			files = (
 				2A1C10FD2C9DEC7F00CC59A5 /* DesignSystem in Frameworks */,
 				2A44417C2C9DA2600003A9C5 /* ZChip in Frameworks */,
+				2AC34A182CA340B5002EE1CB /* NetworkManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,6 +229,7 @@
 			children = (
 				2A44413B2C9D7C320003A9C5 /* Constants.swift */,
 				2A00F1892CA002550099AD9D /* String+ext.swift */,
+				2AC34A132CA33F7C002EE1CB /* Array+ext.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -235,6 +239,7 @@
 			children = (
 				2A1C10FB2C9DEAAC00CC59A5 /* DesignSystem */,
 				2A44417A2C9D922B0003A9C5 /* ZChip */,
+				2AC34A162CA34074002EE1CB /* NetworkManager */,
 				2A4BF4152C9BEC4C00C96C35 /* ZStore */,
 				2A4BF42C2C9BEC4D00C96C35 /* ZStoreTests */,
 				2A4BF4362C9BEC4D00C96C35 /* ZStoreUITests */,
@@ -259,7 +264,6 @@
 				2A00F18B2CA02CF70099AD9D /* DB */,
 				2A4441382C9D7C070003A9C5 /* Utils */,
 				2A9A293D2C9CAC62002A08C5 /* Codable */,
-				2A9A293A2C9CA760002A08C5 /* NetworkManager */,
 				2A9A29392C9CA720002A08C5 /* HomeScreen */,
 				2A4BF4182C9BEC4C00C96C35 /* SceneDelegate.swift */,
 				2A4BF4162C9BEC4C00C96C35 /* AppDelegate.swift */,
@@ -319,14 +323,6 @@
 				2A57786B2CA2F08A0000C427 /* HomeScreenHelper.swift */,
 			);
 			path = HomeScreen;
-			sourceTree = "<group>";
-		};
-		2A9A293A2C9CA760002A08C5 /* NetworkManager */ = {
-			isa = PBXGroup;
-			children = (
-				2A9A293B2C9CA771002A08C5 /* NetworkManager.swift */,
-			);
-			path = NetworkManager;
 			sourceTree = "<group>";
 		};
 		2A9A293D2C9CAC62002A08C5 /* Codable */ = {
@@ -398,6 +394,7 @@
 			packageProductDependencies = (
 				2A44417B2C9DA2600003A9C5 /* ZChip */,
 				2A1C10FC2C9DEC7F00CC59A5 /* DesignSystem */,
+				2AC34A172CA340B5002EE1CB /* NetworkManager */,
 			);
 			productName = ZStore;
 			productReference = 2A4BF4132C9BEC4C00C96C35 /* ZStore.app */;
@@ -537,8 +534,8 @@
 				2A024D442CA1F131009FF681 /* PriceAndOfferDetailsView.swift in Sources */,
 				2AB509AB2CA04E69003A3209 /* DBQueries.swift in Sources */,
 				2A4BF4892C9C01C900C96C35 /* Test.swift in Sources */,
+				2AC34A142CA33F7C002EE1CB /* Array+ext.swift in Sources */,
 				2A153A8C2C9F27330009761F /* LinearLayoutCellViewModel.swift in Sources */,
-				2A9A293C2C9CA771002A08C5 /* NetworkManager.swift in Sources */,
 				2A153A8E2C9F32520009761F /* AvailableColorsViewModel.swift in Sources */,
 				2A32C7252CA13A2B00E0575E /* WaterfallLayoutCell.swift in Sources */,
 				2A8F9A552C9E87A30091DC5D /* FabView.swift in Sources */,
@@ -729,7 +726,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFMXCJUU8Y;
+				DEVELOPMENT_TEAM = YR5TTS6ZU7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZStore/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -759,7 +756,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LFMXCJUU8Y;
+				DEVELOPMENT_TEAM = YR5TTS6ZU7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZStore/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -906,6 +903,10 @@
 		2A44417B2C9DA2600003A9C5 /* ZChip */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ZChip;
+		};
+		2AC34A172CA340B5002EE1CB /* NetworkManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkManager;
 		};
 /* End XCSwiftPackageProductDependency section */
 

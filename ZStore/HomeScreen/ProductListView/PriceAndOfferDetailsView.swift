@@ -81,19 +81,20 @@ class PriceAndOfferDetailsView : UIView{
         if let _offerPrice = offerPrice{
             self.currentPriceLbl.text = "₹\(String(describing: _offerPrice))"
             self.oldPriceLabel.attributedText = String(describing: Utils.formatDecimal(price)).renderStrikeThrough()
-            self.chipView.config(with: "Save ₹\(String(describing: amountSaved ?? 0))")
             self.oldPriceLabel.isHidden = false
-            self.chipView.isHidden = false
-            
+
+            if hideAmountSaved{
+                self.chipView.isHidden = true
+            }else{
+                self.chipView.config(with: "Save ₹\(String(describing: amountSaved ?? 0))")
+                self.chipView.isHidden = false
+            }            
         }else{
             self.chipView.isHidden = true
             self.currentPriceLbl.text = "₹\(Utils.formatDecimal(price))"
             self.oldPriceLabel.isHidden = true
         }
         
-        if hideAmountSaved{
-            self.chipView.isHidden = true
-        }
 
     }
 

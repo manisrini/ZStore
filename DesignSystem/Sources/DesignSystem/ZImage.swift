@@ -16,7 +16,7 @@ public class ZImageView : UIImageView{
         self.sd_imageTransition = .flipFromTop
         
         if let url = URL(string: url){
-            let placeholderImage = UIImage(named: "thumbnail")
+            let placeholderImage = UIImage(named: "thumbnail",in: .module,compatibleWith: nil)
             self.sd_setImage(with: url) { image, error, type, url in
                 if error != nil{
                     self.image = placeholderImage

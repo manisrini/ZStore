@@ -7,6 +7,7 @@
 
 import Foundation
 import ZChip
+import CoreData
 
 enum SortWith{
     case Rating
@@ -235,6 +236,34 @@ class HomeScreenViewModel{
             offer: _offer
         )
     }
+    
+    func getOffersCount(cardOffersFetchController : NSFetchedResultsController<CardOfferData>?) -> Int{
+        if self.searchStr.isEmptyOrWhitespace(){
+            return cardOffersFetchController?.sections?.first?.numberOfObjects ?? 0
+        }else{
+            return 0
+        }
+    }
+    
+    func showOfferSupplementaryViews() -> Bool{
+        if self.searchStr.isEmptyOrWhitespace(){
+            return true
+        }
+        return false
+    }
+    
+    func getSearchTag(fetchController : NSFetchedResultsController<ProductData>?) -> Tag{ //Show the count while searching
+        let selectedCategoryName = self.selectedCategory?.name ?? ""
+        let selectedCategoryId = self.selectedCategory?.id ?? ""
+        
+        if self.searchStr.isEmptyOrWhitespace(){
+            return Tag(id: selectedCategoryId, text: selectedCategoryName.capitalized)
+        }else{
+            let productCount = fetchController?.fetchedObjects?.count ?? 0
+            return Tag(id: selectedCategoryId, text: "\(selectedCategoryName.capitalized) (\(productCount))")
+        }
+    }
+    
     
 }
 

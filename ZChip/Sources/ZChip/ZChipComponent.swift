@@ -86,6 +86,25 @@ public class ZChipComponent : UIView
         self.viewModel?.tags = tags
         self.tagCollectionView.reloadData()
     }
+    
+    public func updateTag(tag : Tag){
+        if let _viewModel = viewModel{
+            var updatedTags : [Tag] = []
+            var currentTagIndex = 0
+            
+            for (index,item) in _viewModel.tags.enumerated(){
+                if item.id == tag.id{
+                    currentTagIndex = index
+                    updatedTags.append(Tag(id: tag.id, text: tag.text, isSelected: true))
+                }else{
+                    updatedTags.append(Tag(id: item.id, text: item.text, isSelected: false))
+                }
+            }
+            
+            self.viewModel?.tags = updatedTags
+            self.tagCollectionView.reloadItems(at: [IndexPath(item: currentTagIndex, section: 0)])
+        }
+    }
         
 }
 

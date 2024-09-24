@@ -10,6 +10,7 @@ import ZChip
 
 protocol FilterViewDelegate : AnyObject{
     func didChangeCategory(item : Tag)
+    func didChangeHeight(height : CGFloat)
 }
 
 class FilterView: UIView {
@@ -45,14 +46,18 @@ class FilterView: UIView {
         chipComponent.updateTags(tags: items)
     }
     
+    func updateItem(tag : Tag){
+        chipComponent.updateTag(tag: tag)
+    }
+    
 }
 
 extension FilterView : ZChipComponentDelegate{
     func didSelectNewItem(item: Tag) {
         self.delegate?.didChangeCategory(item: item)
     }
-    
-    func didChangeHeight(size: CGSize) {
         
+    func didChangeHeight(size: CGSize) {
+        self.delegate?.didChangeHeight(height: size.height)
     }
 }

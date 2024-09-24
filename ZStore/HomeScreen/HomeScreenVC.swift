@@ -67,13 +67,16 @@ final class HomeScreenVC: UIViewController {
     }
     
     @objc func didTapCancelButton(){
+        
         self.viewModel.searchStr = ""
+        self.configStickyHeaderView()
         self.updateView()
         self.setNavBarStyles()
         searchController?.isActive = false
     }
     
     private func setNavBarStyles(){
+
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Zstore"
@@ -185,6 +188,8 @@ final class HomeScreenVC: UIViewController {
         self.viewModel.fetchData(dataManager) { [weak self] in
             
             DispatchQueue.main.async {
+                
+                //MARK: Fetch data from DB using NSFetchedResultsController
                 
                 self?.categoryFetchedResultsController = self?.dataManager.setupCategoriesFetchedResultsController()
                 
@@ -316,6 +321,11 @@ extension HomeScreenVC : UICollectionViewDataSource,UICollectionViewDelegate,UIC
         if section == 0 {
             return cardOfferFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
         } else {
+            if productFetchedResultsController?.sections?.first?.numberOfObjects ?? 0 == 0{
+                collectionView.setEmptyMessageText("No products found", textColor: .black)
+            }else{
+                collectionView.setEmptyMessageText("", textColor: .clear)
+            }
             return productFetchedResultsController?.sections?.first?.numberOfObjects ?? 0
         }
     }
@@ -364,6 +374,8 @@ extension HomeScreenVC : FilterViewDelegate{
     func didChangeCategory(item: Tag) {
                 
         if let availableCategories = categoryFetchedResultsController?.fetchedObjects{
+        
+            
             if let newSelectedCategory = availableCategories.filter({$0.id ?? "" == item.id}).first{
                 self.viewModel.selectedCategory = newSelectedCategory
                 self.updateListLayout(layout: newSelectedCategory.layout)
@@ -381,7 +393,7 @@ extension HomeScreenVC : FilterViewDelegate{
     }
     
     func didChangeHeight(height: CGFloat) {
-        self.filterViewHeightConstraint?.update(offset: height + 40)
+        self.filterViewHeightConstraint?.update(offset: height + 20)
         self.filterView.layoutIfNeeded()
     }
 }

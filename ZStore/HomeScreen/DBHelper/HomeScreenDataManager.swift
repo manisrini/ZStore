@@ -167,7 +167,7 @@ class HomeScreenDataManager
         return categoriesFetchedResultsController
     }
     
-    //MARK: Update product data source for search results
+        
     func setupProductFetchedResultsController(searchStr : String,categoryId : String,cardOfferId : String? = nil,sortDescriptor : String = "rating") -> NSFetchedResultsController<ProductData>{
         
         let fetchRequest : NSFetchRequest<ProductData> = ProductData.fetchRequest()

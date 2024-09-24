@@ -50,6 +50,7 @@ class FilterView: UIView {
         chipComponent.updateTag(tag: tag)
     }
     
+        
 }
 
 extension FilterView : ZChipComponentDelegate{

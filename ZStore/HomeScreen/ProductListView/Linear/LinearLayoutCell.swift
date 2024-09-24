@@ -119,7 +119,6 @@ class LinearLayoutCell : UICollectionViewCell{
             make.left.equalTo(productPreview.snp.right).offset(15)
             make.right.equalTo(self.contentView).offset(-10)
             make.top.equalTo(self.contentView)
-//            make.height.equalTo(200)
         }
     }
 

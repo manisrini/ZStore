@@ -10,11 +10,10 @@ import SnapKit
 
 public class ZChipView : UIView{
     
-    let chipLbl : UILabel = {
-        var label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        return label
+    let chipBtn : UIButton = {
+        var button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     let containerView : UIView = {
@@ -33,27 +32,19 @@ public class ZChipView : UIView{
     }
     
     private func addView(){
-//        self.addSubview/*(containerView)*/
-        self.addSubview(chipLbl)
-
-//        containerView.snp.makeConstraints { make in
-//            make.left.equalTo(self)
-//            make.right.equalTo(self)
-//            make.height.equalTo(30)
-//        }
         
-        chipLbl.snp.makeConstraints { make in
+        var configuration = UIButton.Configuration.bordered()
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2)
+        configuration.baseForegroundColor = .white
+        configuration.titlePadding = 0  
+        chipBtn.configuration = configuration
+        self.addSubview(chipBtn)
+        
+        self.layer.cornerRadius = 15
+        
+        chipBtn.snp.makeConstraints { make in
             make.left.equalTo(self).offset(5)
-            make.right.equalTo(self).offset(5)
-            make.centerY.equalTo(self)
-        }
-        chipLbl.font = .fontStyle(size: 13, weight: .medium)
-        chipLbl.layer.cornerRadius = 13
-        
-        chipLbl.snp.makeConstraints { make in
-            make.left.equalTo(self).offset(15)
-            make.right.equalTo(self).offset(15)
-            make.centerX.equalTo(self)
+            make.top.equalTo(self)
             make.height.equalTo(30)
         }
     }
@@ -65,14 +56,16 @@ public class ZChipView : UIView{
         bgColor : UIColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Capsicum.rawValue),
         textColor : UIColor = .white
     ){
-        self.chipLbl.text = text
-        self.chipLbl.font = font
-        self.chipLbl.textColor = textColor
-        self.chipLbl.backgroundColor = bgColor
-//        self.containerView.backgroundColor = bgColor
-//        self.containerView.snp.makeConstraints { make in
-//            make.height.equalTo(height)
-//        }
+        var configuration = UIButton.Configuration.bordered()
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: height), // Set the font size
+            .foregroundColor: textColor
+        ]
+        let attributedTitle = NSAttributedString(string: text, attributes: attributes)
+        configuration.baseBackgroundColor = bgColor
+        configuration.attributedTitle = AttributedString(attributedTitle)
+        self.chipBtn.configuration = configuration
+
     }
 
 }

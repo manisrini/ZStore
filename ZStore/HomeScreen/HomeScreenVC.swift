@@ -20,11 +20,13 @@ final class HomeScreenVC: UIViewController {
     var filterViewHeightConstraint: Constraint?
     private var baseView = UIView()
     private var offerSectionFooterView : OfferSectionFooterView?
-    
+    private var searchController: UISearchController?
+
     var categoryFetchedResultsController: NSFetchedResultsController<CategoryData>?
     var productFetchedResultsController: NSFetchedResultsController<ProductData>?
     var cardOfferFetchedResultsController: NSFetchedResultsController<CardOfferData>?
     var dataManager = HomeScreenDataManager()
+    
     var workItem : DispatchWorkItem?
 
     lazy var searchBar : UISearchBar = UISearchBar(frame: CGRectMake(0, 0, UIScreen.main.bounds.size.width * 0.9, 20))
@@ -46,7 +48,7 @@ final class HomeScreenVC: UIViewController {
          }
 
         self.setNavStyles()
-        self.setUpSearchBar()
+        self.setupSearchController()
         self.setupBaseView()
         self.setupFilterView()
         self.setupCollectionView()
@@ -56,19 +58,43 @@ final class HomeScreenVC: UIViewController {
             
     private func setNavStyles(){
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Store"
         label.textAlignment = .left
         let titleItem = UIBarButtonItem(customView: label)
-        titleItem.tintColor = .white
         self.navigationItem.leftBarButtonItem = titleItem
+
+        let searchButton = UIButton(type: .system)
+        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        searchButton.tintColor = .black
+        searchButton.addTarget(self, action: #selector(didTapSearchIcon), for: .touchUpInside)
+
+        let searchBarButton = UIBarButtonItem(customView: searchButton)
+        self.navigationItem.rightBarButtonItem = searchBarButton
+        
+        self.navigationItem.titleView = nil
+        
     }
     
-    private func setUpSearchBar(){
-        searchBar.placeholder = "Placeholder"
-        searchBar.delegate = self
-        searchBar.showsCancelButton = true
-        let leftNavBarButton = UIBarButtonItem(customView:searchBar)
-        self.navigationItem.leftBarButtonItem = leftNavBarButton
+    private func setupSearchController() {
+        searchController = HomeScreenHelper.setUpSearchController()
+        searchController?.searchResultsUpdater = self
+    }
+
+    @objc func didTapSearchIcon(){
+        self.navigationItem.titleView = searchController?.searchBar ?? UIView()
+        self.navigationItem.leftBarButtonItem = nil
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(didTapCancelButton))
+        cancelButton.tintColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
+        self.navigationItem.rightBarButtonItem = cancelButton
+        searchController?.isActive = true
+
+    }
+    
+    @objc func didTapCancelButton(){
+        self.viewModel.searchStr = ""
+        self.setNavStyles()
+        searchController?.isActive = false
     }
     
 
@@ -367,17 +393,13 @@ extension HomeScreenVC : FilterViewDelegate{
                 self.viewModel.selectedCategory = newSelectedCategory
                 self.updateListLayout(category: newSelectedCategory)
             }
-    //        self.viewModel.updateProducts()
-    //        self.viewModel.updateOffers()
-    //        self.fetchProducts()
-
             self.updateProducts(categoryId: item.id, cardOfferId: nil)
             self.storeCollectionView.collectionViewLayout.invalidateLayout()
         }
     }
     
     func didChangeHeight(height: CGFloat) {
-        self.filterViewHeightConstraint?.update(offset: height + 20)
+        self.filterViewHeightConstraint?.update(offset: height + 40)
         self.filterView.layoutIfNeeded()
     }
 }
@@ -405,11 +427,9 @@ extension HomeScreenVC : NSFetchedResultsControllerDelegate{
     
 }
 
-extension HomeScreenVC : UISearchBarDelegate{
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        self.viewModel.searchStr = searchText
-        
+extension HomeScreenVC : UISearchResultsUpdating{
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
         self.workItem?.cancel()
         
         self.workItem = DispatchWorkItem{
@@ -428,14 +448,6 @@ extension HomeScreenVC : UISearchBarDelegate{
         self.filterView.updateItem(tag: self.viewModel.getSearchTag(fetchController: productFetchedResultsController))
         self.storeCollectionView.reloadData()
     }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.viewModel.searchStr = ""
-        let categoryId = self.viewModel.selectedCategory?.id ?? ""
-        let cardOfferId = self.viewModel.selectedOffer?.id
-//        self.updateProducts(
-//            categoryId: categoryId,
-//            cardOfferId: cardOfferId
-//        )
-    }
+
 }
+

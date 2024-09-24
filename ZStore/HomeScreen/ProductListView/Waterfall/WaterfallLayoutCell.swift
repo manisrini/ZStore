@@ -41,7 +41,6 @@ class WaterfallLayoutCell: UICollectionViewCell {
     private let productImageView: ZImageView = {
         let imageView = ZImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = Utils.hexStringToUIColor(hex: DSMColorTokens.Arattai_Tangelo.rawValue)
         imageView.layer.cornerRadius = 20
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -88,7 +87,6 @@ class WaterfallLayoutCell: UICollectionViewCell {
         favButton.setTitle(" Add to Fav", for: .normal)
         favButton.addTarget(self, action: #selector(didTapAddToFavButton), for: .touchUpInside)
         
-        // Adjust the image and text placement
         favButton.titleLabel?.font = .fontStyle(size: 13, weight: .semibold)
         favButton.tintColor = Utils.hexStringToUIColor(hex: DSMColorTokens.SecondaryGrey.rawValue)
         favButton.setTitleColor(Utils.hexStringToUIColor(hex: DSMColorTokens.SecondaryGrey.rawValue), for: .normal)
@@ -128,6 +126,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 20
         // Add constraints
         
+        imageContainerView.layer.cornerRadius = 20
         imageContainerView.snp.makeConstraints { make in
             make.height.equalTo(200)
             make.left.equalTo(contentView)
@@ -136,10 +135,10 @@ class WaterfallLayoutCell: UICollectionViewCell {
         }
 
         productImageView.snp.makeConstraints { make in
-            make.left.equalTo(imageContainerView)
-            make.right.equalTo(imageContainerView)
-            make.top.equalTo(imageContainerView)
-            make.bottom.equalTo(imageContainerView)
+            make.width.equalTo(100)
+            make.height.equalTo(100)
+            make.centerY.equalTo(imageContainerView)
+            make.centerX.equalTo(imageContainerView)
         }
         
         favBtn.snp.makeConstraints { make in
@@ -159,7 +158,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         titleLabel.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(10)
             make.right.equalTo(contentView).offset(-5)
-            make.top.equalTo(productImageView.snp.bottom).offset(10)
+            make.top.equalTo(imageContainerView.snp.bottom).offset(10)
         }
         
         hostingRatingView.view.snp.makeConstraints { make in
@@ -261,7 +260,7 @@ class WaterfallLayoutCell: UICollectionViewCell {
         self.viewModel = product
         productImageView.loadImage(url: product.imageUrl)
         
-        priceDetailsView.config(price: product.price, offerPrice: product.offer?.offerPrice, amountSaved: product.offer?.amountSaved)
+        priceDetailsView.config(price: product.price, offerPrice: product.offer?.offerPrice, amountSaved: product.offer?.amountSaved,hideAmountSaved: true)
 
         titleLabel.text = product.name
         descLbl.attributedText = product.desc.renderMarkDownText()

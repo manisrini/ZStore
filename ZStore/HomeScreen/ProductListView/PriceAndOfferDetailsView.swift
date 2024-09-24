@@ -52,8 +52,8 @@ class PriceAndOfferDetailsView : UIView{
         
         containerPriceView.snp.makeConstraints { make in
             make.left.equalTo(self)
-            make.left.equalTo(self)
-            make.height.equalTo(30)
+            make.right.equalTo(self)
+            make.height.equalTo(40)
         }
         
         currentPriceLbl.snp.makeConstraints { make in
@@ -69,14 +69,15 @@ class PriceAndOfferDetailsView : UIView{
         }
         
         chipView.snp.makeConstraints { make in
-            make.left.equalTo(oldPriceLabel.snp.right).offset(5)
+            make.left.equalTo(oldPriceLabel.snp.right).offset(2)
+            make.right.equalTo(containerPriceView.snp.right).offset(-2)
             make.top.equalTo(containerPriceView).offset(5)
             make.centerY.equalTo(containerPriceView)
         }
 
     }
     
-    func config(price : Double,offerPrice: Int?,amountSaved : Int?){
+    func config(price : Double,offerPrice: Int?,amountSaved : Int?,hideAmountSaved : Bool = false){
         if let _offerPrice = offerPrice{
             self.currentPriceLbl.text = "₹\(String(describing: _offerPrice))"
             self.oldPriceLabel.attributedText = String(describing: Utils.formatDecimal(price)).renderStrikeThrough()
@@ -88,6 +89,10 @@ class PriceAndOfferDetailsView : UIView{
             self.chipView.isHidden = true
             self.currentPriceLbl.text = "₹\(Utils.formatDecimal(price))"
             self.oldPriceLabel.isHidden = true
+        }
+        
+        if hideAmountSaved{
+            self.chipView.isHidden = true
         }
 
     }

@@ -253,7 +253,6 @@ extension HomeScreenVC{
         self.storeCollectionView.delegate = self
         self.storeCollectionView.collectionViewLayout = LinearCompositionFlowLayout.createCompositionalLayout()
         
-        self.storeCollectionView.register(Test.self, forCellWithReuseIdentifier: "Test")
         self.storeCollectionView.register(UINib(nibName: CellIdentifiers.TagCell, bundle: nil), forCellWithReuseIdentifier: CellIdentifiers.TagCell)
         
         self.storeCollectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifiers.OfferCell)
